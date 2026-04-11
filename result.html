@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+  <link href="./css/common.css" rel="stylesheet">
+  <link href="./css/record-list.css" rel="stylesheet">
+  <script type="module" src="./js/result.js"></script>
+  <title>音読アプリ - 結果</title>
+  <style>
+  </style>
+</head>
+<body>
+  <div id="result">
+
+    <section id="session-summary">
+      <div>本日<span id="attempt"></span>回目 計測結果</div>
+      <div id="best" class="small good hidden">自己ベスト更新！</div>
+      <h1 id="last-record" class="score"></h1>
+    </section>
+    <section id="memo-section">
+      <input type="text" id="memo" placeholder="一言メモ" class="large"></input>
+      <p id="savedMemo" class="large"></p>
+      <button id="saveMemoBtn" class="compact">
+        <span class="material-symbols-outlined">edit_square</span>
+        <span class="label">保存</span>
+      </button>
+    </section>
+
+    <section id="summary" class="sub-area score">
+      <div class="small">前回比較</div>
+      <div id="diff" class="large">
+        <span id="prev-speed"></span>
+        <span id="prev-diff"></span>
+      </div>
+    </section>
+
+    <section id="record-list">
+      <div>各回の記録</div>
+      <div id="records"></div>
+    </section>
+
+    <section id="actions">
+      <button id="retryBtn">
+        <span class="material-symbols-outlined">refresh</span>
+        <span class="label">もう一度</span>
+      </button>
+      <button id="homeBtn" onclick="location.href='index.html'">
+        <span class="material-symbols-outlined">home</span>
+        <span class="label">TOPへ</span>
+      </button>
+    </section>
+
+  </div>
+  <template id="record-item-template">
+    <div class="record-item">
+      <div class="main-row score">
+        <span class="attempt"></span>
+        <span class="speed"></span>
+        <span class="time"></span>
+      </div>
+      <div class="memo"></div>
+    </div>
+  </template>
+</body>
+</html>

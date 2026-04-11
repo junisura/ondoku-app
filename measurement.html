@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+  <link href="./css/common.css" rel="stylesheet">
+  <script type="module" src="./js/measurement.js"></script>
+  <title>音読アプリ - 計測</title>
+  <style>
+#title {
+  font-size: x-large;
+}
+
+#genre {
+  font-size: large;
+}
+
+#text {
+  line-height: 1.8;
+  font-size: large;
+  margin: 1em 0;
+  white-space: pre-wrap;
+}
+
+#timerBox {
+  position: fixed;
+  bottom: 0.0rem;
+  left: 0;
+  right: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+
+  background-color: rgba(0, 0, 0, 0.75);
+  color: #fff;
+  padding: 0.5rem;
+}
+
+.timer-box button {
+  padding: 0.5rem;
+  width: 3rem;
+}
+
+#timerText {
+  font-size: xx-large;
+  font-family: "JetBrains Mono", monospace;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-style: normal;
+  min-width: 90px;
+}
+#measurement {
+  padding-bottom: 5rem; /* timerの高さ分 */
+}
+  </style>
+</head>
+<body>
+  <div id="measurement">
+    <header id="actions">
+      <button id="backBtn" onclick="location.href='index.html'" class="compact">
+        <span class="material-symbols-outlined">arrow_back_2</span>
+        <span class="label">戻る</span>
+      </button>
+    </header>
+
+    <section id="measurement-header" class="sub-area small">
+      <span id="attempt"></span>　<span id="prev-speed"></span>
+    </section>
+
+    <main id="text-container">
+      <h1 id="title"></h1>
+      <h2 id="genre"></h2>
+      <p id="text"></p>
+    </main>
+
+    <section id="timerBox" class="timer-box">
+      <button id="resetBtn" class="hidden material-symbols-outlined">replay</button>
+      <button id="startPauseBtn" class="material-symbols-outlined">play_arrow</button>
+      <span id="timerText">00:00.00</span>
+      <button id="stopBtn" class="hidden material-symbols-outlined">stop</button>
+    </section>
+
+  </div>
+<script type="module">
+</script>
+</body>
+</html>

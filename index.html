@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+  <link href="./css/common.css" rel="stylesheet">
+  <script type="module" src="./js/top.js"></script>
+  <title>音読アプリ - TOP</title>
+  <style>
+  </style>
+</head>
+<body>
+  <header id="today-content">
+    <div>本日のテキスト</div>
+    <h1><span id="genre"></span>　<span id="title"></span></h1>
+  </header>
+  
+  <section id="today-summary" class="sub-area score">
+    <div class="summary-item">
+      <span class="label">本日</span>
+      <span id="count"></span>
+    </div>
+    <div class="summary-item">
+      <span class="label">最高：</span>
+      <span id="max-speed"></span>
+    </div>
+    <div class="summary-item">
+      <span class="label">平均：</span>
+      <span id="avg-speed"></span>
+    </div>
+  </section>
+  
+  <section id="actions">
+    <button id="openBtn">
+      <span class="material-symbols-outlined">import_contacts</span>
+      <span class="label">テキストを開く</span>
+    </button>
+    <button id="logBtn" onclick="location.href='history.html'">
+      <span class="material-symbols-outlined">history_edu</span>
+      <span class="label">記録を見る</span>
+    </button>
+  </section>
+  
+<script type="module">
+</script>
+</body>
+</html>

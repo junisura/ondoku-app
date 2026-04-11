@@ -1,0 +1,42 @@
+#month {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+.calendar {
+  display: grid;
+  font-size: large;
+  grid-template-columns: repeat(7, 1fr);
+  line-height: 2;
+  margin: 0 auto;
+  width: min(100%, 400px);
+}
+.day {
+  aspect-ratio: 1;
+  padding: 8px;
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+}
+.day.selected {
+  background-color: rgba(46, 204, 113, 0.25);
+  border-radius: 50%;
+}
+.day.today {
+  color: #2ecc71;
+  font-weight: bold;
+}
+.day.other-month {
+  color: #999;
+}
+.day.has-record::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 4px;
+  height: 3px;
+  background: #2ecc71;
+}
