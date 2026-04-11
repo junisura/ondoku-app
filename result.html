@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic&display=swap" rel="stylesheet">
+  <link href="./common.css" rel="stylesheet">
+  <script src="./common.js"></script>
+  <title>結果</title>
+  <style>
+    #result {
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<h1>結果</h1>
+
+<h2 id="result"></h2>
+
+<textarea id="memo" placeholder="メモ欄（任意）"></textarea>
+<p id="savedMemo"></p>
+<button onclick="save()">保存</button>
+
+<button onclick="location.href='./index.html'">TOPへ戻る</button>
+
+<script>
+const data = JSON.parse(localStorage.getItem("ondoku_current_result"));
+
+document.getElementById("result").textContent =
+  `${Common.formatTimeMs(data.timeSec)} （ ${data.speed.toFixed(2)}文字/秒 ）`;
+
+function save() {
+  const memo = document.getElementById("memo").value;
+
+  const records = JSON.parse(localStorage.getItem("ondoku_records") || "[]");
+
+  const newId = records.length + 1;
+  const createdAt = new Date().toISOString();
+
+  const record = {
+    ...data,
+    id: newId,
+    contentId: data.contentId,
+//    workDate: selectedDate,	// ボタン押したタイミングでcurrentDateを保存しとかなきゃいけなさそう
+    timeSec: data.timeSec,
+    speed: data.speed,
+    memo: memo,
+    createdAt: createdAt
+  };
+
+  records.push(record);
+
+  localStorage.setItem("ondoku_records", JSON.stringify(records));
+  
+  document.getElementById("memo").style.display ="none";
+  document.getElementById("savedMemo").textContent = memo;
+
+  alert("保存しました！");
+
+}
+</script>
+
+</body>
+</html>

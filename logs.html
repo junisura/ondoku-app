@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+  <link href="./common.css" rel="stylesheet">
+  <script src="./common.js"></script>
+  <title>過去ログ</title>
+  <style>
+    #month {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      justify-content: center;
+      margin-bottom: 1rem;
+    }
+    #month button {
+      padding: 0.5rem 0.5rem
+    }
+    .calendar {
+      display: grid;
+      font-size: large;
+      grid-template-columns: repeat(7, 1fr);
+      line-height: 2;
+      margin: 0 auto;
+      width: min(100%, 400px);
+    }
+    .day {
+      aspect-ratio: 1;
+      padding: 8px;
+      text-align: center;
+      cursor: pointer;
+      position: relative;
+    }
+    .day.selected {
+      background-color: rgba(46, 204, 113, 0.25);
+      border-radius: 50%;
+    }
+    .day.today {
+      color: #2ecc71;
+      font-weight: bold;
+    }
+    .day.other-month {
+      color: #999;
+    }
+    .day.has-record::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 4px;
+      height: 3px;
+      background: #2ecc71;
+    }
+    .card {
+      border: 1px solid #ccc;
+      border-radius: 1em;
+      padding: 1em;
+      margin: 1em 0;
+      cursor: pointer;
+    }
+    .memo {
+      border: #e0e0e0 thin 1px;
+      padding: 0.5em;
+    }
+  </style>
+</head>
+<body>
+
+<h1>過去ログ</h1>
+<div id="month">
+  <button onclick="prevYear()" class="material-symbols-outlined">keyboard_double_arrow_left</button>
+  <button onclick="prevMonth()" class="material-symbols-outlined">keyboard_arrow_left</button>
+  <span id="monthLabel"></span>
+  <button onclick="nextMonth()" class="material-symbols-outlined">keyboard_arrow_right</button>
+  <button onclick="nextYear()" class="material-symbols-outlined">keyboard_double_arrow_right</button>
+</div>
+<div id="calendar" class="calendar">
+</div>
+
+<div id="detail">
+  <div id="records"></div>
+  <div id="content-info">
+    <h3 id="title"></h3>
+    <h4 id="genre"></h4>
+    <div id="text"></div>
+  </div>
+</div>
+<button onclick="location.href='index.html'">戻る</button>
+<template id="card-template">
+  <div class="card">
+    <div class="date"></div>
+    <div class="score"></div>
+    <div class="memo"></div>
+  </div>
+</template>
+<script>
+let current = new Date();
+
+let contents = [];
+let contentMap = {};
+let records = [];
+
+let selectedDate = Common.formatYMD(new Date().toISOString()); // 初期値は当日
+
+// 初期化
+async function init() {
+  const res = await fetch("./contents.json");
+  contents = await res.json();
+
+  contents.forEach(c => {
+    contentMap[c.id] = c;
+  });
+
+  records = JSON.parse(localStorage.getItem("ondoku_records") || "[]");
+
+  renderCalendar();           // selected反映
+  renderDetail(selectedDate); // 詳細表示
+}
+
+function renderCalendar() {
+  const year = current.getFullYear();
+  const month = current.getMonth();
+
+  document.getElementById("monthLabel").textContent = `${year} / ${month + 1}`;
+
+  const container = document.getElementById("calendar");
+  container.innerHTML = "";
+
+  const firstDay = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const prevMonthDays = new Date(year, month, 0).getDate();
+
+  const totalCells = Math.ceil((firstDay + daysInMonth) / 7) * 7;
+
+  for (let i = 0; i < totalCells; i++) {
+    let day, cellMonth, isOtherMonth;
+
+    if (i < firstDay) {
+      day = prevMonthDays - firstDay + i + 1;
+      cellMonth = month - 1;
+      isOtherMonth = true;
+    } else if (i >= firstDay + daysInMonth) {
+      day = i - (firstDay + daysInMonth) + 1;
+      cellMonth = month + 1;
+      isOtherMonth = true;
+    } else {
+      day = i - firstDay + 1;
+      cellMonth = month;
+      isOtherMonth = false;
+    }
+
+    const date = new Date(year, cellMonth, day);
+    const dateStr = Common.formatYMD(date);
+
+    const todayStr = Common.formatYMD(new Date().toISOString());
+    const isToday = dateStr === todayStr;
+    const isSelected = dateStr === selectedDate;
+
+    const hasRecord = records.some(r => r.createdAt.slice(0,10) === dateStr);
+
+    const div = document.createElement("div");
+
+    div.classList.add("day");
+    if (isOtherMonth) div.classList.add("other-month");
+    if (hasRecord) div.classList.add("has-record");
+    if (isToday) div.classList.add("today");
+    if (isSelected) div.classList.add("selected");
+
+    div.textContent = day;
+    div.dataset.date = dateStr;
+    div.onclick = () => onDateClick(dateStr, div);
+
+    container.appendChild(div);
+
+  }
+}
+
+function onDateClick(dateStr, el) {
+  // 1. 直前選択を解除
+  const prevDateStr = selectedDate;
+  if (prevDateStr) {
+    const prevEl = document.querySelector(
+      `.day[data-date="${prevDateStr}"]`
+    );
+    if (prevEl) prevEl.classList.remove("selected");
+  }
+  document.getElementById("title").textContent = "";
+  document.getElementById("genre").textContent = "";
+  document.getElementById("text").textContent = "";
+
+  // 2. 状態更新
+  selectedDate = dateStr;
+
+  // 3. 新しい選択
+  el.classList.add("selected");
+
+  // 4. 詳細
+  renderDetail(dateStr);
+}
+
+function renderDetail(dateStr) {
+  const dayRecords = records.filter(r => r.workDate === dateStr);
+
+  const recordContainer = document.getElementById("records");
+  recordContainer.innerHTML = "";
+
+  if (dayRecords.length === 0) {
+    recordContainer.textContent = "記録なし";
+    return;
+  }
+
+  // contentIdでグループ
+  const grouped = {};
+
+  for (const r of dayRecords) {
+    if (!grouped[r.contentId]) grouped[r.contentId] = [];
+    grouped[r.contentId].push(r);
+  }
+
+  for (const contentId in grouped) {
+    const recs = grouped[contentId];
+    const content = contentMap[contentId];
+    if (!content) continue;
+
+    // 新しい順
+    recs.sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+    // memo（上）
+    const tmpl = document.getElementById("card-template");
+
+    for (const r of recs) {
+      const clone = tmpl.content.cloneNode(true);
+
+      clone.querySelector(".date").textContent = Common.formatYMDhms(r.createdAt);
+      clone.querySelector(".score").textContent = `${Common.formatTimeMs(r.timeSec)} （${r.speed.toFixed(2)}文字/秒）`;
+
+      if (r.memo) {
+        clone.querySelector(".memo").textContent = r.memo;
+      } else {
+        clone.querySelector(".memo").remove(); // 無いなら消す
+      }
+
+      recordContainer.appendChild(clone);
+    }
+
+    // content（下）
+    document.getElementById("title").textContent = content.title;
+    document.getElementById("genre").textContent = content.genre;
+    document.getElementById("text").textContent = content.text;
+  }
+}
+
+function prevYear() {
+  current.setFullYear(current.getFullYear() - 1);
+  renderCalendar();
+}
+
+function prevMonth() {
+  current.setMonth(current.getMonth() - 1);
+  renderCalendar();
+}
+
+function nextMonth() {
+  current.setMonth(current.getMonth() + 1);
+  renderCalendar();
+}
+
+function nextYear() {
+  current.setFullYear(current.getFullYear() + 1);
+  renderCalendar();
+}
+
+init();
+renderDetail(selectedDate);
+</script>
+</body>
+</html>
