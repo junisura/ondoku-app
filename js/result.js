@@ -12,8 +12,13 @@ guardSameDay(workDate);
 // 初期化
 async function init() {
   const todayRecords = getTodayRecords(records, workDate);
+  if (todayRecords.length === 0) {
+    alert("計測記録がありません。TOPに戻ります");
+    location.href = "index.html";
+    return;
+  }
   const last = todayRecords[todayRecords.length - 1];
-  
+
   document.getElementById("attempt").textContent = todayRecords.length;
   document.getElementById("last-record").textContent =
     `${last.speed.toFixed(2)}文字/秒 （${last.time_sec.toFixed(2)}秒）`;
