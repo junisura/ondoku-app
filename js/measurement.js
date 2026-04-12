@@ -1,6 +1,6 @@
 import { formatYMD, formatTimeMs, guardSameDay } from "./date.js";
 import { loadDateMap, loadRecords, saveRecords } from "./storage.js";
-import { loadContents, findContent } from "./contents.js";
+import { loadContents, findContent, guardTodayContent } from "./contents.js";
 import { getTodayRecords, sortByCreatedAt, generateId } from "./records.js";
 import { Timer } from "./timer.js";
 
@@ -19,6 +19,7 @@ async function init() {
 
   const contentId = dateMap[today];
   current = findContent(contents, contentId);
+  if (!guardTodayContent(contentId, today)) return;
 
   const todayRecords = sortByCreatedAt(getTodayRecords(records, today));
 

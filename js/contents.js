@@ -1,3 +1,5 @@
+import { loadDateMap } from "./storage.js";
+
 export async function loadContents() {
   const res = await fetch("./contents.json");
   return await res.json();
@@ -22,4 +24,21 @@ export function ensureTodayContent(dateMap, contents, workDate) {
   }
 
   return dateMap[workDate];
+}
+
+export function getContentId(workDate) {
+  const map = loadDateMap();
+  return map[workDate];
+}
+
+export function guardTodayContent(contentId, workDate) {
+  const expected = getContentId(workDate);
+
+  if (!contentId || contentId !== expected) {
+    alert("無効なコンテンツです");
+    location.href = "index.html";
+    return false;
+  }
+
+  return true;
 }

@@ -1,9 +1,9 @@
 import { formatTimeMs, formatYMD, formatYMDhms } from "./date.js";
 import { loadDateMap, loadRecords } from "./storage.js";
-import { loadContents } from "./contents.js";
+import { loadContents, findContent } from "./contents.js";
 import { getTodayRecords, sortByCreatedAt, calcStreak } from "./records.js";
 let current = new Date();
-let contentMap = {};
+let contents = null;
 let dateMap = {};
 let records = [];
 let todayStr = "";
@@ -13,12 +13,9 @@ let selectedDate = formatYMD(new Date().toISOString()); // 初期値は当日
 // 初期化
 async function init() {
   // データ読み込み
-  const contents = await loadContents();
+  contents = await loadContents();
   dateMap = loadDateMap();
   records = loadRecords();
-  contents.forEach(c => {
-    contentMap[c.id] = c;
-  });
 
   renderCalendar();           // selected反映
   renderStreak();
@@ -120,7 +117,7 @@ function renderDetail(dateStr) {
   recordContainer.innerHTML = "";
 
   const contentId = dateMap[dateStr];
-  const content = contentMap[contentId];
+  const content = findContent(contents, contentId);
   if (!content) {
     recordContainer.textContent = "登録なし";
     return;
