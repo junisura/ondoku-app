@@ -81,10 +81,15 @@ function renderCalendar() {
 }
 
 function renderStreak() {
+  const yesterday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1);
+  const yesterdayStr = formatYMD(yesterday.toISOString());
+  const hasYesterday = records.some(r => r.work_date === yesterdayStr);
   const hasToday = records.some(r => r.work_date === todayStr);
   const streak = calcStreak(records);
 
-  document.getElementById("streak").textContent = `${streak}日継続中！`;
+  if (hasYesterday) {
+    document.getElementById("streak").textContent = `${streak}日継続中！`;
+  }
   if (!hasToday) {
     document.getElementById("warning").classList.remove("hidden");
   }
