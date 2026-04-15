@@ -27,9 +27,8 @@ async function init() {
   const { current, prev } = getLastTwoRecords(records, workDate);
   const el = document.getElementById("prev-speed");
 
-  if (!prev) {
-    el.textContent = "なし";
-  } else {
+  if (prev) {
+    document.getElementById("summary").classList.remove("hidden");
     const diff = current.speed - prev.speed;
     el.textContent = `${prev.speed.toFixed(2)}文字/秒`;
 
