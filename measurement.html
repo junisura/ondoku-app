@@ -16,6 +16,7 @@
   <link href="./css/components.css" rel="stylesheet">
   <link href="./css/layout.css" rel="stylesheet">
   <link href="./css/utilities.css" rel="stylesheet">
+  <link href="./css/measurement.css" rel="stylesheet">
   <script type="module" src="./js/measurement.js"></script>
   <title>まいにち！ラピ読 - 計測</title>
 </head>
@@ -24,63 +25,55 @@
   <!-- 共通ヘッダー -->
   <header class="header">
     <div class="header__inner">
-      <button class="btn btn--secondary header__back">
-        ← TOPへ
+      <button id="homeBtn" class="btn btn--secondary header__back" onclick="location.href='index.html'">
+        <span class="material-symbols-outlined">home</span>
+        <span class="label">TOPへ</span>
       </button>
     </div>
   </header>
 
-  <main class="container">
+  <main class="container pb-ex">
 
     <!-- テキスト -->
     <section class="card card--main">
       <div class="card__header">
         <h2 class="card__title">本日のテキスト</h2>
-        <span class="text-muted">m月d日（aaa）</span>
+        <span id="today-date" class="text-muted">m月d日（aaa）</span>
       </div>
 
       <div class="card__body">
-        <h3 class="text-title">テキストタイトル</h3>
-        <p class="text-category">テキストカテゴリ</p>
-        <p class="text-body">テキスト本文</p>
+        <h3 id="text-title" class="text-title">テキストタイトル</h3>
+        <p id="text-category" class="text-category">テキストカテゴリ</p>
+        <p id="text-body" class="text-body">テキスト本文</p>
 
-        <div class="text-muted mt-8 text-right">
-          文字数：x,xxx字（目安：mi分s秒）
-        </div>
+        <div id="text-count" class="text-muted mt-8 text-right">文字数：xxx字</div>
       </div>
     </section>
 
-    <!-- 操作エリア -->
-    <section class="control mt-16">
-
-      <!-- メイン操作 -->
-      <div class="control__main">
-        <button class="btn btn--primary btn--large control__start">
-          ▶ 開始
+    <!-- タイマーエリア -->
+    <section class="timer-box">
+      <div class="timer-row">
+        <div id="timer-value" class="timer__value">00:00.00</div>
+      </div>
+      <div class="control-row">
+        <button id="resetBtn" class="btn btn--secondary control__btn">
+          <span class="material-symbols-outlined">replay</span>
+          <span class="label">リセット</span>
         </button>
-        <div class="text-muted text-center mt-8">
-          タップで開始・停止を切替
+
+        <div class="controls__center">
+          <button id="startPauseBtn" class="btn btn--primary btn--large control__start">
+            <span class="material-symbols-outlined">play_arrow</span>
+            <span class="label">開始</span>
+          </button>
+          <p class="controls__hint mt-0">タップで開始・停止を切替</p>
         </div>
-      </div>
 
-      <!-- サブ操作 -->
-      <div class="control__side mt-16">
-
-        <button class="btn btn--secondary control__reset">
-          ↺ リセット
+        <button id="stopBtn" class="btn btn--secondary control__btn">
+          <span class="material-symbols-outlined">stop</span>
+          <span class="label">終了</span>
         </button>
-
-        <button class="btn btn--danger control__stop">
-          ■ 終了
-        </button>
-
       </div>
-
-    </section>
-
-    <!-- タイマー -->
-    <section class="timer mt-16">
-      <div class="timer__value">mi:ss.sss</div>
     </section>
 
   </main>

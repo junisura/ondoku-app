@@ -8,7 +8,14 @@
 .container {
   max-width: 480px;
   margin: 0 auto;
-  padding: 16px;
+  padding: 0 16px;
+}
+
+.with-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
 }
 
 /* ボタン */
@@ -17,10 +24,11 @@
   align-items: center;
   justify-content: center;
   border-radius: 8px;
-  padding: 10px 16px;
+  padding: 8px 12px;
   font-weight: 600;
   cursor: pointer;
   border: none;
+  gap: 4px;
 }
 
 .btn--block {
@@ -29,8 +37,8 @@
 
 .btn--large {
   width: 100%;
-  padding: 16px;
-  font-size: 18px;
+  padding: 8px;
+  font-size: var(--font-lg);
   border-radius: 999px;
 }
 
@@ -40,9 +48,9 @@
 }
 
 .btn--secondary {
-  background: var(--color-gray-100);
-  color: var(--color-gray-900);
-  border: 1px solid var(--color-gray-300);
+  background: var(--color-white);
+  color: var(--color-primary-600);
+  border: 1px solid var(--color-primary-500);
 }
 
 .btn--danger {
@@ -74,28 +82,16 @@
 }
 
 .card__title {
-  font-size: 16px;
+  font-size: var(--font-md);
   font-weight: 600;
 }
 
 .card__body {
 }
 
-/* タイマー */
-.timer {
-  font-family: "JetBrains Mono", monospace;
-  text-align: center;
-}
-
-.timer__value {
-  font-size: 48px;
-  font-weight: 700;
-  color: var(--color-gray-900);
-}
-
 /* 計測結果 */
 .result__time {
-  font-size: 40px;
+  font-size: var(--font-xxl); /* 元は40pxだった */
   font-weight: 700;
 }
 
@@ -119,7 +115,7 @@
 
 /* テキスト本文 */
 .text-title {
-  font-size: 20px;
+  font-size: var(--font-xl-sm);
   font-weight: 700;
   margin-bottom: 8px;
 }
@@ -128,10 +124,11 @@
   font-family: "BIZ UDPGothic", sans-serif;
   white-space: pre-wrap;
   line-height: 1.8;
+  font-size: var(--font-md-lg);
 }
 
 .text-strong {
-  font-size: 24px;
+  font-size: var(--font-lg); /* 元は24pxだった */
   font-weight: 700;
 }
 
@@ -158,30 +155,6 @@
 
 .text-right {
   text-align: right;
-}
-
-/* コントロール */
-.control {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.control__main {
-  width: 100%;
-  text-align: center;
-}
-
-.control__side {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  gap: 12px;
-}
-
-.control__reset,
-.control__stop {
-  flex: 1;
 }
 
 /* リスト */

@@ -1,7 +1,7 @@
 import { formatYMD, formatJpYMD, formatJpMDA } from "./date.js";
 import { loadDateMap, saveDateMap, loadRecords } from "./storage.js";
 import { loadContents, findContent, ensureTodayContent } from "./contents.js";
-import { getTodayRecords, getBestRecord } from "./records.js";
+import { getBestRecord } from "./records.js";
 
 let today = "";
 

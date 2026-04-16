@@ -29,6 +29,16 @@
   --color-accent-700: #B45309;
   --color-accent-500: #F59E0B;
   --color-accent-100: #FEF3C7;
+
+  --font-xss: 0.6rem;
+  --font-xs: 0.75rem;  /* 12px */
+  --font-sm: 0.875rem; /* 14px */
+  --font-md: 1rem;     /* 16px */
+  --font-md-lg: 1.125rem; /* 18px */
+  --font-lg: 1.25rem;  /* 20px */
+  --font-xl-sm: 1.75rem;
+  --font-xl: 2rem;     /* 32px */
+  --font-xxl: 2.5rem;  /* タイマー */
 }
 
 body {
