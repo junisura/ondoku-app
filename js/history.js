@@ -87,7 +87,7 @@ function renderStreak() {
   const hasToday = records.some(r => r.work_date === todayStr);
   const streak = calcStreak(records);
 
-  if (hasYesterday) {
+  if (hasYesterday || hasToday) {
     document.getElementById("streak").textContent = `${streak}日継続中！`;
   }
   if (!hasToday) {
