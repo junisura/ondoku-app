@@ -11,7 +11,7 @@
   <link href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
   <link href="./css/base.css" rel="stylesheet">
   <link href="./css/components.css" rel="stylesheet">
   <link href="./css/layout.css" rel="stylesheet">
@@ -25,14 +25,14 @@
   <!-- 共通ヘッダー -->
   <header class="header">
     <div class="header__inner">
-      <button id="homeBtn" class="btn btn--secondary header__back" onclick="location.href='index.html'">
+      <a href="index.html" class="btn btn--secondary header__back">
         <span class="material-symbols-outlined">home</span>
-        <span class="label">TOPへ</span>
-      </button>
+        <span class="btn__label">TOPへ</span>
+      </a>
     </div>
   </header>
 
-  <main class="container pb-ex">
+  <main class="container pb-timer-space">
 
     <!-- テキスト -->
     <section class="card card--main">
@@ -46,7 +46,7 @@
         <p id="text-category" class="text-category">テキストカテゴリ</p>
         <p id="text-body" class="text-body">テキスト本文</p>
 
-        <div id="text-count" class="text-muted mt-8 text-right">文字数：xxx字</div>
+        <p id="text-count" class="text-muted mt-8 text-right">文字数：xxx字</p>
       </div>
     </section>
 
@@ -56,22 +56,22 @@
         <div id="timer-value" class="timer__value">00:00.00</div>
       </div>
       <div class="control-row">
-        <button id="resetBtn" class="btn btn--secondary control__btn">
+        <button id="resetBtn" class="btn btn--secondary control__btn btn--reset">
           <span class="material-symbols-outlined">replay</span>
-          <span class="label">リセット</span>
+          <span class="btn__label">リセット</span>
         </button>
 
-        <div class="controls__center">
+        <div class="control__center">
           <button id="startPauseBtn" class="btn btn--primary btn--large control__start">
             <span class="material-symbols-outlined">play_arrow</span>
-            <span class="label">開始</span>
+            <span class="btn__label">開始</span>
           </button>
-          <p class="controls__hint mt-0">タップで開始・停止を切替</p>
+          <p class="control__hint mt-0">タップで開始・停止を切替</p>
         </div>
 
-        <button id="stopBtn" class="btn btn--secondary control__btn">
+        <button id="stopBtn" class="btn btn--secondary control__btn btn--stop">
           <span class="material-symbols-outlined">stop</span>
-          <span class="label">終了</span>
+          <span class="btn__label">終了</span>
         </button>
       </div>
     </section>

@@ -1,13 +1,6 @@
-#month {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  justify-content: center;
-  margin-bottom: 1rem;
-}
 .calendar__grid {
   display: grid;
-  font-size: large;
+  font-size: var(--font-md-lg);
   grid-template-columns: repeat(7, 1fr);
   line-height: 2;
   margin: 0 auto;
@@ -20,7 +13,9 @@
 
 .day {
   aspect-ratio: 1;
-  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-align: center;
   cursor: pointer;
   position: relative;
@@ -31,7 +26,7 @@
 }
 .day.today {
   color: var(--color-primary-500);
-  font-weight: bold;
+  font-weight: 700;
 }
 .day.other-month {
   color: var(--color-gray-300);

@@ -3,7 +3,6 @@
 .mt-16 { margin-top: 16px; }
 
 .pa-0 { padding: 0; }
-.pb-ex { padding-bottom: 10rem; }
 
 .mb-0 { margin-bottom: 0px; }
 .mb-8 { margin-bottom: 8px; }
@@ -24,10 +23,33 @@
 
 .score { font-family: "JetBrains Mono", monospace; }
 
-.hidden { visibility: hidden; }
 .display-none { display: none; }
 
 .no-wrap { white-space: nowrap; }
 
 .border-bottom { border-bottom: 1px solid var(--color-gray-300); }
 
+.flex-area-center {
+  display: flex;
+  gap: 0.25rem;
+  align-items: center;
+}
+
+.flex-center-end {
+  justify-content: center;
+  align-items: end;
+}
+
+.flex-center-center {
+  justify-content: center;
+  align-items: center;
+}
+
+.l-inline-nowrap {
+  white-space: nowrap;
+}
+
+.l-inline-wrap {
+  display: flex;
+  flex-wrap: wrap;
+}

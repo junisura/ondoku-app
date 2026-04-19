@@ -1,7 +1,9 @@
-import { formatTimeMs, formatYMD, formatYMDhms, formatJpMDA, formatTimeHm } from "./date.js";
+import { formatYMD, formatJpMDA } from "./date.js";
 import { loadDateMap, loadRecords } from "./storage.js";
 import { loadContents, findContent } from "./contents.js";
-import { getTodayRecords, getBestRecord, sortByCreatedAt, calcStreak } from "./records.js";
+import { getTodayRecords, getSortedByCreatedAt, calcStreak } from "./records.js";
+import { renderRecordList } from "./recordList.js";
+
 let today = new Date();
 let contents = null;
 let dateMap = {};
@@ -36,6 +38,7 @@ function renderCalendar() {
   const prevMonthDays = new Date(year, month, 0).getDate();
 
   const totalCells = Math.ceil((firstDay + daysInMonth) / 7) * 7;
+  todayStr = formatYMD(new Date().toISOString());
 
   for (let i = 0; i < totalCells; i++) {
     let day, cellMonth, isOtherMonth;
@@ -57,7 +60,6 @@ function renderCalendar() {
     const date = new Date(year, cellMonth, day);
     const dateStr = formatYMD(date);
 
-    todayStr = formatYMD(new Date().toISOString());
     const isToday = dateStr === todayStr;
     const isSelected = dateStr === selectedDate;
 
@@ -73,7 +75,7 @@ function renderCalendar() {
 
     div.textContent = day;
     div.dataset.date = dateStr;
-    div.onclick = () => onDateClick(dateStr, div);
+    div.addEventListener("click", () => onDateClick(dateStr, div));
 
     container.appendChild(div);
 
@@ -116,15 +118,12 @@ function onDateClick(dateStr, el) {
 
 function renderDetail(dateStr) {
   const recordContainer = document.getElementById("records");
-  const template = document.getElementById("record-item-template");
   recordContainer.innerHTML = "";
-
-  const workDateISO = new Date(dateStr).toISOString();
-  document.getElementById("record-date").textContent = formatJpMDA(workDateISO);
+  document.getElementById("record-date").textContent = formatJpMDA(dateStr);
 
   // record（上）
-  const dayRecords = getTodayRecords(records, selectedDate);
-  const sorted = sortByCreatedAt(dayRecords, true);
+  const dayRecords = getTodayRecords(records, dateStr);
+  const sorted = getSortedByCreatedAt(dayRecords, true);
 
   if (dayRecords.length === 0) {
     recordContainer.textContent = "記録なし";
@@ -132,7 +131,8 @@ function renderDetail(dateStr) {
     return;
   } else {
     recordContainer.classList.add("list");
-    initRecords(dateStr);
+    // recordList.jsを呼ぶ
+    renderRecordList(sorted);
   }
 
   // text（下）
@@ -148,36 +148,6 @@ function renderDetail(dateStr) {
     document.getElementById("text-section").classList.add("display-none");
   }
 
-}
-
-// 各回の記録
-function initRecords(workDate) {
-
-  const list = document.getElementById("records");
-  const template = document.getElementById("list-item-template");
-  list.innerHTML = "";
-
-  const workDateRecords = getTodayRecords(records, workDate);
-  const workDateBestRec = getBestRecord(workDateRecords);
-  const sorted = sortByCreatedAt(workDateRecords, true);
-  sorted.forEach((record, index) => {
-    const clone = template.content.cloneNode(true);
-
-    if (workDateBestRec.attempt_index === record.attempt_index) {
-      clone.querySelector(".list__item").classList.add("is-best");
-      clone.querySelector(".item__best").textContent = "crown";
-    }
-    clone.querySelector(".item__timestamp").textContent = formatTimeHm(record.created_at);
-    clone.querySelector(".item__time").textContent = formatTimeMs(record.time_sec);
-    clone.querySelector(".speed").textContent = record.speed.toFixed(2);
-    if (record.memo) {
-      clone.querySelector(".item__memo").textContent = record.memo;
-    } else {
-      clone.querySelector(".item__memo").classList.add("display-none");
-    }
-
-    list.appendChild(clone);
-  });
 }
 
 function prevYear() {
@@ -200,8 +170,10 @@ function nextYear() {
   renderCalendar();
 }
 
-init();
-window.addEventListener("DOMContentLoaded", () => {
+// メイン処理
+window.addEventListener("DOMContentLoaded", async () => {
+  await init();
+
   document.getElementById("prevYearBtn").addEventListener("click", prevYear);
   document.getElementById("prevMonthBtn").addEventListener("click", prevMonth);
   document.getElementById("nextMonthBtn").addEventListener("click", nextMonth);

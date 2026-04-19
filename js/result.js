@@ -1,20 +1,21 @@
 import { formatYMD, guardSameDay, formatTimeMs, formatTimeHm } from "./date.js";
 import { loadRecords, saveRecords } from "./storage.js";
-import { getTodayRecords, getLastTwoRecords, getBestRecord, sortByCreatedAt, calcSummary } from "./records.js";
+import { getTodayRecords, getLastTwoRecords, getBestRecord, getSortedByCreatedAt, calcSummary } from "./records.js";
+import { renderRecordList } from "./recordList.js";
 
 // データ読み込み
 const records = loadRecords();
 const params = new URLSearchParams(location.search);
-const workDate = params.get("date") || formatYMD(new Date());
-const today = formatYMD(new Date().toISOString());
-guardSameDay(workDate);
+const today = params.get("date") || formatYMD(new Date());
+guardSameDay(today);
 
+let todayRecords = [];
 let memoInput = null;
 let memoOutput = null;
 
 // 初期化
-async function init() {
-  const todayRecords = getTodayRecords(records, workDate);
+function init() {
+  todayRecords = getTodayRecords(records, today);
   if (todayRecords.length === 0) {
     alert("計測記録がありません。TOPに戻ります");
     location.href = "index.html";
@@ -33,7 +34,7 @@ async function init() {
     switchMemoDisplay(true);
   }
 
-  const { current, prev } = getLastTwoRecords(records, workDate);
+  const { current, prev } = getLastTwoRecords(records, today);
 
   if (prev) {
     document.getElementById("diff-card").classList.remove("display-none");
@@ -42,65 +43,46 @@ async function init() {
 
     const diff = current.time_sec - prev.time_sec;
     const diffTime = document.getElementById("diff__time");
-    if (diff > 0) {
-      // 正数の場合は符号なしで返されるので符号を付与する
-      diffTime.textContent = `+${formatTimeMs(diff)}　BAD...`;
-      diffTime.classList.add("text-danger");
-    } else if (diff === 0) {
-      diffTime.textContent = `${formatTimeMs(diff)}`;
-    } else {
-      // 負数の場合は符号付きで返される
-      diffTime.textContent = `${formatTimeMs(diff)}　GOOD!`;
-      diffTime.classList.add("text-success");
+    const diffDisplay = getDiffDisplay(diff);
+
+    diffTime.textContent = diffDisplay.text;
+    if (diffDisplay.className) {
+      diffTime.classList.add(diffDisplay.className);
     }
   }
 
   const best = Math.max(...records.map(r => r.speed));
   if (last.speed >= best) {
-    document.getElementById("best-updated").classList.remove("hidden");
+    document.getElementById("best-updated").classList.remove("display-none");
   }
 
-  initRecords();
+  // recordList.jsを呼ぶ
+  renderRecordList(todayRecords);
 }
 
-// 各回の記録
-function initRecords() {
-  const list = document.getElementById("records");
-  const template = document.getElementById("list-item-template");
-  list.innerHTML = "";
+function getDiffDisplay(diff) {
+  if (diff > 0) {
+    return {
+      text: `${formatTimeMs(diff)} 速度DOWN...`,
+      className: "text-danger",
+    };
+  }
 
-  const todayRecords = getTodayRecords(records, workDate);
-  const todayBestRec = getBestRecord(todayRecords);
-  const sorted = sortByCreatedAt(todayRecords, true);
-  sorted.forEach((record, index) => {
-    const clone = template.content.cloneNode(true);
+  if (diff < 0) {
+    return {
+      text: `${formatTimeMs(diff)} 速度UP!`,
+      className: "text-success",
+    };
+  }
 
-    if (todayBestRec.attempt_index === record.attempt_index) {
-      clone.querySelector(".list__item").classList.add("is-best");
-      clone.querySelector(".item__best").textContent = "crown";
-    }
-    clone.querySelector(".item__timestamp").textContent = formatTimeHm(record.created_at);
-    clone.querySelector(".item__time").textContent = formatTimeMs(record.time_sec);
-    clone.querySelector(".speed").textContent = record.speed.toFixed(2);
-    if (record.memo) {
-      clone.querySelector(".item__memo").textContent = record.memo;
-    } else {
-      clone.querySelector(".item__memo").classList.add("display-none");
-    }
-
-    list.appendChild(clone);
-  });
+  return {
+    text: formatTimeMs(diff),
+    className: "",
+  };
 }
-
-init();
-window.addEventListener("DOMContentLoaded", () => {
-  document.getElementById("saveMemoBtn").addEventListener("click", saveMemo);
-  document.getElementById("retryBtn").addEventListener("click", retry);
-});
 
 // ボタン
 function saveMemo() {
-  const todayRecords = getTodayRecords(records, workDate);
   const last = todayRecords[todayRecords.length - 1];
 
   if (last) {
@@ -112,13 +94,14 @@ function saveMemo() {
   switchMemoDisplay(true);
 
   alert("保存しました！");
-  
-  initRecords();
+
+  // recordList.jsを呼ぶ
+  renderRecordList(todayRecords);
 };
 
 function retry() {
   const url = new URL("measurement.html", location.href);
-  url.searchParams.set("date", workDate);
+  url.searchParams.set("date", today);
   location.href = url.toString();
 };
 
@@ -133,3 +116,10 @@ function switchMemoDisplay(isOutput) {
     memoOutput.classList.add("display-none");
   }
 }
+
+// メイン処理
+window.addEventListener("DOMContentLoaded", () => {
+  init();
+  document.getElementById("saveMemoBtn").addEventListener("click", saveMemo);
+  document.getElementById("retryBtn").addEventListener("click", retry);
+});

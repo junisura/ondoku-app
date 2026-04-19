@@ -11,25 +11,23 @@
   <link href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
   <link href="./css/base.css" rel="stylesheet">
   <link href="./css/components.css" rel="stylesheet">
   <link href="./css/layout.css" rel="stylesheet">
   <link href="./css/utilities.css" rel="stylesheet">
   <script type="module" src="./js/result.js"></script>
   <title>まいにち！ラピ読 - 結果</title>
-<style>
-</style>
 </head>
 <body class="page page--result">
 
   <!-- 共通ヘッダー -->
   <header class="header">
     <div class="header__inner">
-      <button id="homeBtn" class="btn btn--secondary header__back" onclick="location.href='index.html'">
+      <a href="index.html" class="btn btn--secondary header__back">
         <span class="material-symbols-outlined">home</span>
-        <span class="label">TOPへ</span>
-      </button>
+        <span class="btn__label">TOPへ</span>
+      </a>
     </div>
   </header>
 
@@ -38,21 +36,21 @@
     <!-- 今回結果 -->
     <section class="card card--main">
       <div class="card__header text-center">
-        <h2 class="card__title">今回の記録<span id="best-updated" class="font-small ml-8 text-success hidden">自己ベスト更新！</div></h2>
+        <h2 class="card__title">今回の記録<span id="best-updated" class="font-small ml-8 text-success display-none">自己ベスト更新！</span></h2>
       </div>
       <div class="card__body text-center">
-        <div id="last__record" class="score l-inline-wrap flex-center-end">
-          <span id="last__time" class="result__time l-inline-nowrap">mi:ss.sss</span><wbr />
+        <div id="result__record" class="score l-inline-wrap flex-center-end">
+          <span id="last__time" class="result__time l-inline-nowrap">mi:ss.sss</span><wbr>
           <span id="last__speed" class="result__speed l-inline-nowrap">（x.xx文字/秒）</span>
         </div>
       </div>
 
       <div id="memo-area" class="card__body mt-8 flex-area-center">
-        <input type="text" id="memo__input" placeholder="一言メモ" class="one-line-input"></input>
-        <p id="memo__output" class=""></p>
+        <input type="text" id="memo__input" placeholder="一言メモ" maxlength="100" class="one-line-input">
+        <p id="memo__output"></p>
         <button id="saveMemoBtn" class="btn btn--secondary no-wrap">
           <span class="material-symbols-outlined">edit_square</span>
-          <span class="label">保存</span>
+          <span class="btn__label">保存</span>
         </button>
       </div>
     </section>
@@ -89,15 +87,15 @@
     <div class="mt-16">
       <button id="retryBtn" class="btn btn--primary btn--block">
         <span class="material-symbols-outlined">refresh</span>
-        <span class="label">もう一度計測する</span>
+        <span class="btn__label">もう一度計測する</span>
       </button>
     </div>
 
     <div class="mt-8">
-      <button id="homeBtn" class="btn btn--secondary header__back btn--block mb-8" onclick="location.href='index.html'">
+      <a href="index.html" class="btn btn--secondary header__back btn--block">
         <span class="material-symbols-outlined">home</span>
-        <span class="label">TOPへ</span>
-      </button>
+        <span class="btn__label">TOPへ</span>
+      </a>
     </div>
 
   </main>
@@ -111,7 +109,10 @@
         <span class="item__speed"><span class="speed score">x.xx</span><span class="unit font-small">文字/秒</span></span>
       </div>
       <div class="record-memo">
-        <span class="item__memo font-small"></span>
+        <p class="item__memo"></p>
+        <button class="memo-toggle" type="button">
+          <span class="material-symbols-outlined">expand_more</span>
+        </button>
       </div>
     </li>
   </template>

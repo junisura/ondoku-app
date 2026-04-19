@@ -2,7 +2,7 @@ export function getTodayRecords(records, today) {
   return records.filter(r => r.work_date === today);
 }
 
-export function sortByCreatedAt(records, isDesc = false) {
+export function getSortedByCreatedAt(records, isDesc = false) {
   const sorted = [...records].sort((a, b) =>
     a.created_at.localeCompare(b.created_at)
   );

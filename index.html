@@ -11,12 +11,12 @@
   <link href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
   <link href="./css/base.css" rel="stylesheet">
   <link href="./css/components.css" rel="stylesheet">
   <link href="./css/layout.css" rel="stylesheet">
   <link href="./css/utilities.css" rel="stylesheet">
-  <script type="module" src="./js/top.js"></script>
+  <script type="module" src="js/index.js"></script>
   <title>まいにち！ラピ読 - TOP</title>
 </head>
 <body class="page page--top">
@@ -25,8 +25,8 @@
 
     <!-- サイトタイトル -->
     <h1 class="mt-8">
-      <div id="logo" class="">まいにち！ラピ読</div><!-- タイトルロゴにする 今のテキストはALTに置く-->
-      <div id="copy" class="font-medium">高速(rapid)音読で脳を活性化💪</div>
+      <span id="logo">まいにち！ラピ読</span><!-- タイトルロゴにする 今のテキストはALTに置く-->
+      <p id="copy" class="font-medium">高速(rapid)音読で脳を活性化💪</p>
     </h1>
 
     <!-- 本日のテキスト -->
@@ -43,8 +43,8 @@
     </section>
 
     <!-- ベスト記録 -->
-    <section class="card card--sub mt-16">
-      <div class="card__header">
+    <section id="best-record-section" class="card card--sub display-none mt-16">
+      <div class="card__title">
         <span>自己ベスト記録</span>
       </div>
       <div class="card__body text-center">
@@ -57,16 +57,16 @@
     <div class="mt-16">
       <button id="openBtn" class="btn btn--primary btn--block">
         <span class="material-symbols-outlined">import_contacts</span>
-        <span class="label">テキストを開く</span>
+        <span class="btn__label">テキストを開く</span>
       </button>
     </div>
 
     <!-- サブ導線 -->
     <div class="mt-8">
-      <button id="historyBtn" class="btn btn--secondary btn--block" onclick="location.href='history.html'">
+      <a id="historyBtn" class="btn btn--secondary btn--block" href="history.html">
         <span class="material-symbols-outlined">history_edu</span>
-        <span class="label">過去ログを見る</span>
-      </button>
+        <span class="btn__label">過去ログを見る</span>
+      </a>
     </div>
 
     <!-- 補助 -->

@@ -5,28 +5,3 @@
 .page--history .card--main {
   margin-bottom: 8px;
 }
-
-.flex-area-center {
-  display: flex;
-  gap: 0.25rem;
-  align-items: center;
-}
-
-.l-inline-wrap {
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.l-inline-nowrap {
-  white-space: nowrap;
-}
-
-.flex-center-end {
-  justify-content: center;
-  align-items: end;
-}
-
-.flex-center-center {
-  justify-content: center;
-  align-items: center;
-}

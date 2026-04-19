@@ -11,32 +11,35 @@ async function init() {
   const dateMap = loadDateMap();
   const records = loadRecords();
 
-  const todayISO = new Date().toISOString();
-  today = formatYMD(todayISO);
+  today = formatYMD(new Date().toISOString());
   const contentId = ensureTodayContent(dateMap, contents, today);
+  if (!contentId) return;
   saveDateMap(dateMap);
 
   const current = findContent(contents, contentId);
-
   const bestRecord = getBestRecord(records);
 
   // DOM反映
-  document.getElementById("today-date").textContent = formatJpMDA(todayISO);
+  document.getElementById("today-date").textContent = formatJpMDA(today);
   document.getElementById("text-title").textContent = current.title;
   document.getElementById("text-category").textContent = current.genre;
-  document.getElementById("best-record").textContent = 
-    `${bestRecord.speed.toFixed(2)}文字/秒（${bestRecord.time_sec.toFixed(2)}秒）`;
-  document.getElementById("best-date").textContent = formatJpYMD(bestRecord.work_date);
+  if (bestRecord) {
+    document.getElementById("best-record-section").classList.remove("display-none");
+    document.getElementById("best-record").textContent = 
+      `${bestRecord.speed.toFixed(2)}文字/秒（${bestRecord.time_sec.toFixed(2)}秒）`;
+    document.getElementById("best-date").textContent = formatJpYMD(bestRecord.work_date);
+  }
 
 }
-
-init();
-window.addEventListener("DOMContentLoaded", () => {
-  document.getElementById("openBtn").addEventListener("click", openText);
-});
 
 function openText() {
   const url = new URL("measurement.html", location.href);
   url.searchParams.set("date", today);
   location.href = url.toString();
 };
+
+// メイン処理
+window.addEventListener("DOMContentLoaded", async () => {
+  await init();
+  document.getElementById("openBtn").addEventListener("click", openText);
+});

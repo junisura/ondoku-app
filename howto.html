@@ -11,7 +11,7 @@
   <link href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
   <link href="./css/base.css" rel="stylesheet">
   <link href="./css/components.css" rel="stylesheet">
   <link href="./css/layout.css" rel="stylesheet">
@@ -24,9 +24,10 @@
   <!-- 共通ヘッダー -->
   <header class="header">
     <div class="header__inner">
-      <button class="btn btn--secondary header__back">
-        ← TOPへ
-      </button>
+      <a href="index.html" class="btn btn--secondary header__back">
+        <span class="material-symbols-outlined">home</span>
+        <span class="btn__label">TOPへ</span>
+      </a>
     </div>
   </header>
 
@@ -71,8 +72,12 @@
     </section>
 
     <div class="mt-16">
-      <button class="btn btn--secondary btn--block">TOPへ戻る</button>
+      <a href="index.html" class="btn btn--secondary header__back btn--block">
+        <span class="material-symbols-outlined">home</span>
+        <span class="btn__label">TOPへ</span>
+      </a>
     </div>
+
 
   </main>
 </body>

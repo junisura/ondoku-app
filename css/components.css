@@ -2,13 +2,13 @@
 .header {
   max-width: 480px;
   margin: 0 auto;
-  padding: 8px;
+  padding: 0.5rem;
 }
 
 .container {
   max-width: 480px;
   margin: 0 auto 1rem;
-  padding: 0 16px;
+  padding: 0.5rem;
 }
 
 .with-icon {
@@ -25,14 +25,17 @@
   justify-content: center;
   border-radius: 8px;
   padding: 8px 12px;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
   border: none;
   gap: 4px;
+  text-decoration: none;
 }
 
 .btn--block {
+  display: flex;
   width: 100%;
+  font-size: var(--font-lg);
 }
 
 .btn--large {
@@ -56,6 +59,14 @@
 .btn--danger {
   background: var(--color-danger-600);
   color: var(--color-white);
+}
+
+.btn--calendar {
+  padding: 0.5rem;
+  font-size: var(--font-lg);
+  background: var(--color-white);
+  color: var(--color-primary-600);
+  border: 1px solid var(--color-primary-500);
 }
 
 /* カード */
@@ -88,10 +99,7 @@
 
 .card__title {
   font-size: var(--font-md);
-  font-weight: 600;
-}
-
-.card__body {
+  font-weight: 700;
 }
 
 /* 計測結果 */
@@ -148,18 +156,6 @@
   text-decoration: wavy underline;
 }
 
-.text-muted {
-  color: var(--color-gray-500);
-}
-
-.text-success {
-  color: var(--color-success-600);
-}
-
-.text-danger {
-  color: var(--color-danger-600);
-}
-
 .text-best {
   color: var(--color-accent-500);
 }
@@ -210,9 +206,46 @@
   flex-wrap: wrap;
   gap: 0;
 }
-.item__speed > speed,
-.item__speed > unit {
+.item__speed > .speed,
+.item__speed > .unit {
   white-space: nowrap;
+}
+
+.record-memo {
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.item__memo {
+  flex: 1;
+  overflow: hidden;
+  max-height: 1.5em; /* 1行分 */
+  line-height: 1.5;
+  transition: max-height 0.25s ease;
+  margin: 0;
+  font-family: "BIZ UDPGothic", sans-serif;
+  font-size: var(--font-sm);
+  font-weight: 500;
+}
+
+.record-memo.expanded .item__memo {
+  max-height: 12em;
+}
+
+.memo-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.memo-toggle .material-symbols-outlined {
+  transition: transform 0.25s ease;
+}
+
+.record-memo.expanded .memo-toggle .material-symbols-outlined {
+  transform: rotate(180deg);
 }
 
 /* リンク */
