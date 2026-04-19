@@ -16,6 +16,7 @@
   <link href="./css/components.css" rel="stylesheet">
   <link href="./css/layout.css" rel="stylesheet">
   <link href="./css/utilities.css" rel="stylesheet">
+  <link href="./css/calendar.css" rel="stylesheet">
   <script type="module" src="./js/history.js"></script>
   <title>まいにち！ラピ読 - 過去ログ</title>
 </head>
@@ -24,22 +25,33 @@
   <!-- 共通ヘッダー -->
   <header class="header">
     <div class="header__inner">
-      <button class="btn btn--secondary header__back">
-        ← TOPへ
+      <button id="homeBtn" class="btn btn--secondary header__back" onclick="location.href='index.html'">
+        <span class="material-symbols-outlined">home</span>
+        <span class="label">TOPへ</span>
       </button>
     </div>
   </header>
 
   <main class="container">
 
-    <!-- カレンダー -->
-    <section class="card card--main">
+    <!-- 連続記録 -->
+    <section id="streak-section" class="card card--accent">
       <div class="card__header">
-        <h2 class="card__title">記録カレンダー</h2>
-        <div class="calendar__nav">
-          <button class="btn btn--secondary">‹</button>
-          <span class="calendar__month">2024年5月</span>
-          <button class="btn btn--secondary">›</button>
+        <h3 class="card__title">連続記録</h3>
+      </div>
+      <div id="now-streak"><span id="streak-days" class="font-xl-sm"></span>日継続中！</div>
+      <span id="warning" class="text-danger display-none font-small">今日の分がまだだよ！</span>
+    </section>
+
+    <!-- カレンダー -->
+    <section class="card card--main mt-16">
+      <div class="card__header flex-center-center">
+        <div class="card__title calendar__nav flex-area-center">
+          <button id="prevYearBtn" class="btn btn--secondary material-symbols-outlined pa-0">keyboard_double_arrow_left</button>
+          <button id="prevMonthBtn" class="btn btn--secondary material-symbols-outlined pa-0">keyboard_arrow_left</button>
+          <span id="month-label" class="calendar__month">yyyy年m月</span>
+          <button id="nextMonthBtn" class="btn btn--secondary material-symbols-outlined pa-0">keyboard_arrow_right</button>
+          <button id="nextYearBtn" class="btn btn--secondary material-symbols-outlined pa-0">keyboard_double_arrow_right</button>
         </div>
       </div>
 
@@ -47,21 +59,11 @@
         <div class="calendar">
 
           <!-- 曜日 -->
-          <div class="calendar__week">
-            <span>日</span><span>月</span><span>火</span>
-            <span>水</span><span>木</span><span>金</span><span>土</span>
+          <div class="calendar__week calendar__grid">
+            <span>日</span><span>月</span><span>火</span><span>水</span><span>木</span><span>金</span><span>土</span>
           </div>
-
           <!-- 日付 -->
-          <div class="calendar__grid">
-
-            <button class="calendar__day">1</button>
-            <button class="calendar__day is-recorded">2</button>
-            <button class="calendar__day is-recorded is-selected">3</button>
-            <button class="calendar__day">4</button>
-            <button class="calendar__day">5</button>
-
-            <!-- 以下ループ -->
+          <div id="calendar-date" class="calendar__grid">
           </div>
 
         </div>
@@ -71,29 +73,39 @@
     <!-- 選択日の記録 -->
     <section class="card card--sub mt-16">
       <div class="card__header">
-        <h3 class="card__title">m月d日(aaa)の記録</h3>
+        <h3 class="card__title"><span id="record-date">m月d日(aaa)</span>の記録</h3>
       </div>
 
-      <ul class="list">
-        <li class="list__item">
-          <span>n回目</span>
-          <span>mi:ss.sss</span>
-        </li>
+      <ul id="records" class="list">
       </ul>
     </section>
 
     <!-- テキスト本文 -->
-    <section class="card card--sub mt-16">
+    <section id="text-section" class="card card--sub mt-16 display-none">
       <div class="card__header">
-        <h3 class="card__title">テキストタイトル</h3>
-        <p class="text-category">テキストカテゴリ</p>
+        <h3 id="text-title" class="card__title">テキストタイトル</h3>
+        <p id="text-category" class="text-category">テキストカテゴリ</p>
       </div>
 
       <div class="card__body">
-        <p class="text-body">テキスト本文</p>
+        <p id="text-body" class="text-body font-small">テキスト本文</p>
       </div>
     </section>
 
   </main>
+
+  <template id="list-item-template">
+    <li class="list__item">
+      <div class="record-main">
+        <span class="item__best text-best font-small material-symbols-outlined">　</span>
+        <span class="item__timestamp text-center text-muted">hh:mi</span>
+        <span class="item__time score font-large">mi:ss.sss</span>
+        <span class="item__speed"><span class="speed score">x.xx</span><span class="unit font-small">文字/秒</span></span>
+      </div>
+      <div class="record-memo">
+        <span class="item__memo font-small"></span>
+      </div>
+    </li>
+  </template>
 </body>
 </html>

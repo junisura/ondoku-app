@@ -1,7 +1,7 @@
-import { formatTimeMs, formatYMD, formatYMDhms } from "./date.js";
+import { formatTimeMs, formatYMD, formatYMDhms, formatJpMDA, formatTimeHm } from "./date.js";
 import { loadDateMap, loadRecords } from "./storage.js";
 import { loadContents, findContent } from "./contents.js";
-import { getTodayRecords, sortByCreatedAt, calcStreak } from "./records.js";
+import { getTodayRecords, getBestRecord, sortByCreatedAt, calcStreak } from "./records.js";
 let today = new Date();
 let contents = null;
 let dateMap = {};
@@ -26,9 +26,9 @@ function renderCalendar() {
   const year = today.getFullYear();
   const month = today.getMonth();
 
-  document.getElementById("monthLabel").textContent = `${year} / ${month + 1}`;
+  document.getElementById("month-label").textContent = `${year}年${month + 1}月`;
 
-  const container = document.getElementById("calendar");
+  const container = document.getElementById("calendar-date");
   container.innerHTML = "";
 
   const firstDay = new Date(year, month, 1).getDay();
@@ -88,10 +88,10 @@ function renderStreak() {
   const streak = calcStreak(records);
 
   if (hasYesterday || hasToday) {
-    document.getElementById("streak").textContent = `${streak}日継続中！`;
+    document.getElementById("streak-days").textContent = streak;
   }
   if (!hasToday) {
-    document.getElementById("warning").classList.remove("hidden");
+    document.getElementById("warning").classList.remove("display-none");
   }
 }
 
@@ -102,9 +102,7 @@ function onDateClick(dateStr, el) {
     const prevEl = document.querySelector(`.day[data-date="${prevDateStr}"]`);
     if (prevEl) prevEl.classList.remove("selected");
   }
-  document.getElementById("title").textContent = "";
-  document.getElementById("genre").textContent = "";
-  document.getElementById("text").textContent = "";
+  document.getElementById("text-section").classList.add("display-none");
 
   // 2. 状態更新
   selectedDate = dateStr;
@@ -121,42 +119,65 @@ function renderDetail(dateStr) {
   const template = document.getElementById("record-item-template");
   recordContainer.innerHTML = "";
 
-  const contentId = dateMap[dateStr];
-  const content = findContent(contents, contentId);
-  if (!content) {
-    recordContainer.textContent = "登録なし";
-    return;
-  }
+  const workDateISO = new Date(dateStr).toISOString();
+  document.getElementById("record-date").textContent = formatJpMDA(workDateISO);
 
+  // record（上）
   const dayRecords = getTodayRecords(records, selectedDate);
   const sorted = sortByCreatedAt(dayRecords, true);
+
   if (dayRecords.length === 0) {
     recordContainer.textContent = "記録なし";
+    recordContainer.classList.remove("list");
     return;
+  } else {
+    recordContainer.classList.add("list");
+    initRecords(dateStr);
   }
 
-  // memo（上）
+  // text（下）
+  const contentId = dateMap[dateStr];
+  const content = findContent(contents, contentId);
+
+  if (content) {
+    document.getElementById("text-section").classList.remove("display-none");
+    document.getElementById("text-title").textContent = content.title;
+    document.getElementById("text-category").textContent = content.genre;
+    document.getElementById("text-body").textContent = content.text;
+  } else {
+    document.getElementById("text-section").classList.add("display-none");
+  }
+
+}
+
+// 各回の記録
+function initRecords(workDate) {
+
+  const list = document.getElementById("records");
+  const template = document.getElementById("list-item-template");
+  list.innerHTML = "";
+
+  const workDateRecords = getTodayRecords(records, workDate);
+  const workDateBestRec = getBestRecord(workDateRecords);
+  const sorted = sortByCreatedAt(workDateRecords, true);
   sorted.forEach((record, index) => {
     const clone = template.content.cloneNode(true);
 
-    clone.querySelector(".attempt").textContent = `${record.attempt_index}回目`;
-    clone.querySelector(".speed").textContent = `${record.speed.toFixed(2)}文字/秒`;
-    clone.querySelector(".time").textContent = `（${record.time_sec.toFixed(2)}秒）`;
-
-    const memoEl = clone.querySelector(".memo");
+    if (workDateBestRec.attempt_index === record.attempt_index) {
+      clone.querySelector(".list__item").classList.add("is-best");
+      clone.querySelector(".item__best").textContent = "crown";
+    }
+    clone.querySelector(".item__timestamp").textContent = formatTimeHm(record.created_at);
+    clone.querySelector(".item__time").textContent = formatTimeMs(record.time_sec);
+    clone.querySelector(".speed").textContent = record.speed.toFixed(2);
     if (record.memo) {
-      memoEl.textContent = record.memo;
+      clone.querySelector(".item__memo").textContent = record.memo;
     } else {
-      memoEl.style.display = "none";
+      clone.querySelector(".item__memo").classList.add("display-none");
     }
 
-    recordContainer.appendChild(clone);
+    list.appendChild(clone);
   });
-
-  // content（下）
-  document.getElementById("title").textContent = content.title;
-  document.getElementById("genre").textContent = content.genre;
-  document.getElementById("text").textContent = content.text;
 }
 
 function prevYear() {

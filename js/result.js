@@ -44,13 +44,13 @@ async function init() {
     const diffTime = document.getElementById("diff__time");
     if (diff > 0) {
       // 正数の場合は符号なしで返されるので符号を付与する
-      diffTime.textContent = `+${formatTimeMs(diff)}　DOWN...`;
+      diffTime.textContent = `+${formatTimeMs(diff)}　BAD...`;
       diffTime.classList.add("text-danger");
     } else if (diff === 0) {
       diffTime.textContent = `${formatTimeMs(diff)}`;
     } else {
       // 負数の場合は符号付きで返される
-      diffTime.textContent = `${formatTimeMs(diff)}　UP!!`;
+      diffTime.textContent = `${formatTimeMs(diff)}　GOOD!`;
       diffTime.classList.add("text-success");
     }
   }
@@ -79,9 +79,9 @@ function initRecords() {
       clone.querySelector(".list__item").classList.add("is-best");
       clone.querySelector(".item__best").textContent = "crown";
     }
-    clone.querySelector(".item__attempt").textContent = `${record.attempt_index}回目`;
     clone.querySelector(".item__timestamp").textContent = formatTimeHm(record.created_at);
     clone.querySelector(".item__time").textContent = formatTimeMs(record.time_sec);
+    clone.querySelector(".speed").textContent = record.speed.toFixed(2);
     if (record.memo) {
       clone.querySelector(".item__memo").textContent = record.memo;
     } else {

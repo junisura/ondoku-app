@@ -7,7 +7,7 @@
 
 .container {
   max-width: 480px;
-  margin: 0 auto;
+  margin: 0 auto 1rem;
   padding: 0 16px;
 }
 
@@ -71,6 +71,11 @@
 
 .card--sub {
   background: var(--color-gray-50);
+  border: 1px solid var(--color-gray-300);
+}
+
+.card--accent {
+  background: var(--color-accent-50);
   border: 1px solid var(--color-gray-300);
 }
 
@@ -173,7 +178,7 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
-  padding: 12px;
+  padding: 8px;
   border-bottom: 1px solid var(--color-gray-300);
 }
 .list__item:last-child {
@@ -186,7 +191,7 @@
 
 .record-main {
   display: grid;
-  grid-template-columns: auto 1fr 1fr 2fr;
+  grid-template-columns: auto 1fr 2fr 2fr;
   align-items: center;
   gap: 8px;
 }
@@ -198,6 +203,16 @@
 
 .record-main > span:last-child {
   border-right: none;
+}
+
+.item__speed {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+}
+.item__speed > speed,
+.item__speed > unit {
+  white-space: nowrap;
 }
 
 /* リンク */

@@ -5,7 +5,7 @@
   justify-content: center;
   margin-bottom: 1rem;
 }
-.calendar {
+.calendar__grid {
   display: grid;
   font-size: large;
   grid-template-columns: repeat(7, 1fr);
@@ -13,6 +13,11 @@
   margin: 0 auto;
   width: min(100%, 400px);
 }
+
+.calendar__week {
+  text-align: center;
+}
+
 .day {
   aspect-ratio: 1;
   padding: 8px;
@@ -21,15 +26,15 @@
   position: relative;
 }
 .day.selected {
-  background-color: rgba(46, 204, 113, 0.25);
+  background-color: var(--color-primary-100);
   border-radius: 50%;
 }
 .day.today {
-  color: #2ecc71;
+  color: var(--color-primary-500);
   font-weight: bold;
 }
 .day.other-month {
-  color: #999;
+  color: var(--color-gray-300);
 }
 .day.has-record::after {
   content: "";
@@ -38,5 +43,5 @@
   right: 0;
   bottom: 4px;
   height: 3px;
-  background: #2ecc71;
+  background-color: var(--color-primary-500);
 }

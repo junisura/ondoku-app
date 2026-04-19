@@ -2,6 +2,7 @@
 .mt-8 { margin-top: 8px; }
 .mt-16 { margin-top: 16px; }
 
+.pa-0 { padding: 0; }
 .pb-ex { padding-bottom: 10rem; }
 
 .mb-0 { margin-bottom: 0px; }
@@ -15,9 +16,11 @@
 .text-center { text-align: center; }
 .text-right { text-align: right; }
 
+.font-xs { font-size: var(--font-xs); }
 .font-small { font-size: var(--font-sm); }
 .font-medium { font-size: var(--font-md); }
 .font-large { font-size: var(--font-lg); }
+.font-xl-sm { font-size: var(--font-xl-sm); }
 
 .score { font-family: "JetBrains Mono", monospace; }
 
