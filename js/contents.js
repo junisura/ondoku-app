@@ -2,7 +2,7 @@ import { loadDateMap } from "./storage.js";
 
 export async function loadContents() {
   const res = await fetch("./contents.json");
-  return await res.json();
+  return res.json();
 }
 
 export function findContent(contents, contentId) {
@@ -18,6 +18,13 @@ export function ensureTodayContent(dateMap, contents, workDate) {
     if (dates.length > 0) {
       const latest = dates.sort().reverse()[0];
       nextContentId = dateMap[latest] + 1;
+    }
+
+    if (nextContentId > contents.length) {
+      console.error("contents.json is missing next content");
+      alert("現在この日の教材を準備中です");
+      location.href = "index.html";
+      return null;
     }
 
     dateMap[workDate] = nextContentId;

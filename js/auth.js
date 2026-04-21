@@ -1,4 +1,4 @@
-const KEY = "auth_ok";
+const KEY = "rapidoku_auth";
 const PASS = atob("b25kb2NrMjAyNg==");
 
 (function () {

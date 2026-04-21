@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
+  <script type="module" src="./js/auth.js"></script>
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex, nofollow">
   <link rel="icon" href="favicon.ico">
@@ -9,46 +10,70 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
-  <link href="./css/common.css" rel="stylesheet">
-  <script type="module" src="./js/top.js"></script>
-  <title>音読アプリ - TOP</title>
-  <style>
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+  <link href="./css/base.css" rel="stylesheet">
+  <link href="./css/components.css" rel="stylesheet">
+  <link href="./css/layout.css" rel="stylesheet">
+  <link href="./css/utilities.css" rel="stylesheet">
+  <script type="module" src="js/index.js"></script>
+  <title>まいにち！ラピ読 - TOP</title>
 </head>
-<body>
-  <header id="today-content">
-    <div>本日のテキスト</div>
-    <h1><span id="genre"></span>　<span id="title"></span></h1>
-  </header>
-  
-  <section id="today-summary" class="sub-area score">
-    <div class="summary-item">
-      <span class="label">本日</span>
-      <span id="count"></span>
+<body class="page page--top">
+
+  <main class="container">
+
+    <!-- サイトタイトル -->
+    <h1 class="mt-8">
+      <span id="logo">まいにち！ラピ読</span><!-- タイトルロゴにする 今のテキストはALTに置く-->
+      <p id="copy" class="font-medium">高速(rapid)音読で脳を活性化💪</p>
+    </h1>
+
+    <!-- 本日のテキスト -->
+    <section class="card card--main">
+      <div class="card__header">
+        <h2 class="card__title">本日のテキスト</h2>
+        <span id="today-date" class="text-muted">m月d日（aaa）</span>
+      </div>
+
+      <div class="card__body">
+        <h3 id="text-title" class="text-title">テキストタイトル</h3>
+        <p id="text-category" class="text-category">テキストカテゴリ</p>
+      </div>
+    </section>
+
+    <!-- ベスト記録 -->
+    <section id="best-record-section" class="card card--sub display-none mt-16">
+      <div class="card__title">
+        <span>自己ベスト記録</span>
+      </div>
+      <div class="card__body text-center">
+        <div id="best-record" class="score text-strong">mi:ss.sss</div>
+        <div id="best-date" class="text-muted">yyyy年m月d日</div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <div class="mt-16">
+      <button id="openBtn" class="btn btn--primary btn--block">
+        <span class="material-symbols-outlined">import_contacts</span>
+        <span class="btn__label">テキストを開く</span>
+      </button>
     </div>
-    <div class="summary-item">
-      <span class="label">最高：</span>
-      <span id="max-speed"></span>
+
+    <!-- サブ導線 -->
+    <div class="mt-8">
+      <a id="historyBtn" class="btn btn--secondary btn--block" href="history.html">
+        <span class="material-symbols-outlined">history_edu</span>
+        <span class="btn__label">過去ログを見る</span>
+      </a>
     </div>
-    <div class="summary-item">
-      <span class="label">平均：</span>
-      <span id="avg-speed"></span>
+
+    <!-- 補助 -->
+    <div class="mt-8 text-center">
+      <a href="howto.html" class="link">使い方・効果を見る</a>
     </div>
-  </section>
-  
-  <section id="actions">
-    <button id="openBtn">
-      <span class="material-symbols-outlined">import_contacts</span>
-      <span class="label">テキストを開く</span>
-    </button>
-    <button id="logBtn" onclick="location.href='history.html'">
-      <span class="material-symbols-outlined">history_edu</span>
-      <span class="label">記録を見る</span>
-    </button>
-  </section>
-  
-<script type="module">
-</script>
+
+  </main>
 </body>
 </html>

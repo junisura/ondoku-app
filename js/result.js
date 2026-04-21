@@ -1,17 +1,21 @@
-import { formatYMD, guardSameDay } from "./date.js";
+import { formatYMD, guardSameDay, formatTimeMs, formatTimeHm } from "./date.js";
 import { loadRecords, saveRecords } from "./storage.js";
-import { getTodayRecords, sortByCreatedAt, getLastTwoRecords, calcSummary } from "./records.js";
+import { getTodayRecords, getLastTwoRecords, getBestRecord, getSortedByCreatedAt, calcSummary } from "./records.js";
+import { renderRecordList } from "./recordList.js";
 
 // データ読み込み
 const records = loadRecords();
 const params = new URLSearchParams(location.search);
-const workDate = params.get("date") || formatYMD(new Date());
-const today = formatYMD(new Date().toISOString());
-guardSameDay(workDate);
+const today = params.get("date") || formatYMD(new Date());
+guardSameDay(today);
+
+let todayRecords = [];
+let memoInput = null;
+let memoOutput = null;
 
 // 初期化
-async function init() {
-  const todayRecords = getTodayRecords(records, workDate);
+function init() {
+  todayRecords = getTodayRecords(records, today);
   if (todayRecords.length === 0) {
     alert("計測記録がありません。TOPに戻ります");
     location.href = "index.html";
@@ -19,94 +23,103 @@ async function init() {
   }
   const last = todayRecords[todayRecords.length - 1];
 
-  document.getElementById("attempt").textContent = todayRecords.length;
-  document.getElementById("last-record").textContent =
-    `${last.speed.toFixed(2)}文字/秒 （${last.time_sec.toFixed(2)}秒）`;
-  document.getElementById("memo").value = last.memo || "";
+  const lastTime = formatTimeMs(last.time_sec);
+  document.getElementById("last__time").textContent = lastTime;
+  document.getElementById("last__speed").textContent = `（${last.speed.toFixed(2)}文字/秒）`;
 
-  const { current, prev } = getLastTwoRecords(records, workDate);
-  const el = document.getElementById("prev-speed");
+  memoInput = document.getElementById("memo__input");
+  memoOutput = document.getElementById("memo__output");
+  if (last.memo) {
+    memoOutput.textContent = `メモ：　${last.memo}`;
+    switchMemoDisplay(true);
+  }
+
+  const { current, prev } = getLastTwoRecords(records, today);
 
   if (prev) {
-    document.getElementById("summary").classList.remove("hidden");
-    const diff = current.speed - prev.speed;
-    el.textContent = `${prev.speed.toFixed(2)}文字/秒`;
+    document.getElementById("diff-card").classList.remove("display-none");
+    document.getElementById("prev__time").textContent = formatTimeMs(prev.time_sec);
+    document.getElementById("prev__speed").textContent = `（${prev.speed.toFixed(2)}文字/秒）`;
 
-    const diffEl = document.getElementById("prev-diff");
-    if (diff >= 0) {
-      diffEl.textContent = `+${diff.toFixed(2)}文字/秒`;
-      diffEl.classList.add("good");
-    } else if (diff === 0) {
-      diffEl.textContent = `${diff.toFixed(2)}文字/秒`;
-    } else {
-      diffEl.textContent = `${diff.toFixed(2)}文字/秒`;
-      diffEl.classList.add("bad");
+    const diff = current.time_sec - prev.time_sec;
+    const diffTime = document.getElementById("diff__time");
+    const diffDisplay = getDiffDisplay(diff);
+
+    diffTime.textContent = diffDisplay.text;
+    if (diffDisplay.className) {
+      diffTime.classList.add(diffDisplay.className);
     }
   }
 
   const best = Math.max(...records.map(r => r.speed));
   if (last.speed >= best) {
-    document.getElementById("best").classList.remove("hidden");
+    document.getElementById("best-updated").classList.remove("display-none");
   }
 
-  initRecords();
+  // recordList.jsを呼ぶ
+  renderRecordList(todayRecords);
 }
 
-// 各回の記録
-function initRecords() {
-  const listEl = document.getElementById("records");
-  const template = document.getElementById("record-item-template");
-  listEl.innerHTML = "";
+function getDiffDisplay(diff) {
+  if (diff > 0) {
+    return {
+      text: `${formatTimeMs(diff)} 速度DOWN...`,
+      className: "text-danger",
+    };
+  }
 
-  const todayRecords = getTodayRecords(records, workDate);
-  const sorted = sortByCreatedAt(todayRecords, true);
-  sorted.forEach((record, index) => {
-    const clone = template.content.cloneNode(true);
+  if (diff < 0) {
+    return {
+      text: `${formatTimeMs(diff)} 速度UP!`,
+      className: "text-success",
+    };
+  }
 
-    clone.querySelector(".attempt").textContent = `${record.attempt_index}回目`;
-    clone.querySelector(".speed").textContent = `${record.speed.toFixed(2)}文字/秒`;
-    clone.querySelector(".time").textContent = `（${record.time_sec.toFixed(2)}秒）`;
-
-    const memoEl = clone.querySelector(".memo");
-    if (record.memo) {
-      memoEl.textContent = record.memo;
-    } else {
-      memoEl.style.display = "none";
-    }
-
-    listEl.appendChild(clone);
-  });
+  return {
+    text: formatTimeMs(diff),
+    className: "",
+  };
 }
-
-init();
-window.addEventListener("DOMContentLoaded", () => {
-  document.getElementById("saveMemoBtn").addEventListener("click", saveMemo);
-  document.getElementById("retryBtn").addEventListener("click", retry);
-});
 
 // ボタン
 function saveMemo() {
-  const todayRecords = getTodayRecords(records, workDate);
   const last = todayRecords[todayRecords.length - 1];
-  const memoEl = document.getElementById("memo");
+
   if (last) {
-    last.memo = memoEl.value;
+    last.memo = memoInput.value;
     saveRecords(records);
   }
 
-  const saveMemoBtn = document.getElementById("saveMemoBtn");
-  memoEl.style.display ="none";
-  saveMemoBtn.style.display ="none";
-  document.getElementById("savedMemo").textContent = `一言メモ：　${memoEl.value}`;
+  memoOutput.textContent = `メモ：　${memoInput.value}`;
+  switchMemoDisplay(true);
 
   alert("保存しました！");
-  
-  initRecords();
+
+  // recordList.jsを呼ぶ
+  renderRecordList(todayRecords);
 };
 
 function retry() {
   const url = new URL("measurement.html", location.href);
-  url.searchParams.set("date", workDate);
+  url.searchParams.set("date", today);
   location.href = url.toString();
 };
 
+function switchMemoDisplay(isOutput) {
+  if (isOutput) {
+    document.getElementById("saveMemoBtn").classList.add("display-none");
+    memoInput.classList.add("display-none");
+    memoOutput.classList.remove("display-none");
+  } else {
+    document.getElementById("saveMemoBtn").classList.remove("display-none");
+    memoInput.classList.remove("display-none");
+    memoOutput.classList.add("display-none");
+  }
+}
+
+// メイン処理
+window.addEventListener("DOMContentLoaded", () => {
+  init();
+  document.getElementById("saveMemoBtn").addEventListener("click", saveMemo);
+  document.getElementById("retryBtn").addEventListener("click", retry);
+});

@@ -1,0 +1,264 @@
+/* コンテナ */
+.header {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 0.5rem;
+}
+
+.container {
+  max-width: 480px;
+  margin: 0 auto 1rem;
+  padding: 0.5rem;
+}
+
+.with-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+/* ボタン */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  gap: 4px;
+  text-decoration: none;
+}
+
+.btn--block {
+  display: flex;
+  width: 100%;
+  font-size: var(--font-lg);
+}
+
+.btn--large {
+  width: 100%;
+  padding: 8px;
+  font-size: var(--font-lg);
+  border-radius: 999px;
+}
+
+.btn--primary {
+  background: var(--color-primary-600);
+  color: var(--color-white);
+}
+
+.btn--secondary {
+  background: var(--color-white);
+  color: var(--color-primary-600);
+  border: 1px solid var(--color-primary-500);
+}
+
+.btn--danger {
+  background: var(--color-danger-600);
+  color: var(--color-white);
+}
+
+.btn--calendar {
+  padding: 0.5rem;
+  font-size: var(--font-lg);
+  background: var(--color-white);
+  color: var(--color-primary-600);
+  border: 1px solid var(--color-primary-500);
+}
+
+/* カード */
+.card {
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.card--main {
+  background: var(--color-white);
+  border: 1px solid var(--color-primary-100);
+}
+
+.card--sub {
+  background: var(--color-gray-50);
+  border: 1px solid var(--color-gray-300);
+}
+
+.card--accent {
+  background: var(--color-accent-50);
+  border: 1px solid var(--color-gray-300);
+}
+
+.card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.card__title {
+  font-size: var(--font-md);
+  font-weight: 700;
+}
+
+/* 計測結果 */
+.result__time {
+  font-size: var(--font-xxl); /* 元は40pxだった */
+  font-weight: 700;
+}
+
+.result__speed {
+  font-size: var(--font-xl-sm);
+  font-weight: 500;
+}
+
+.result__row {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+/* ステータス表示 */
+.text-success {
+  color: var(--color-success-600);
+}
+
+.text-danger {
+  color: var(--color-danger-600);
+}
+
+.text-muted {
+  color: var(--color-gray-500);
+}
+
+/* テキスト本文 */
+.text-title {
+  font-size: var(--font-xl-sm);
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.text-body {
+  font-family: "BIZ UDPGothic", sans-serif;
+  white-space: pre-wrap;
+  line-height: 1.8;
+  font-size: var(--font-md-lg);
+}
+
+.text-strong {
+  font-size: var(--font-lg); /* 元は24pxだった */
+  font-weight: 700;
+}
+
+.text-accent {
+  color: var(--color-danger-700);
+  text-decoration: wavy underline;
+}
+
+.text-best {
+  color: var(--color-accent-500);
+}
+
+/* リスト */
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border: 1px solid var(--color-gray-300);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.list__item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px;
+  border-bottom: 1px solid var(--color-gray-300);
+}
+.list__item:last-child {
+  border-bottom: none;
+}
+
+.list__item.is-best {
+  background: var(--color-accent-100);
+}
+
+.record-main {
+  display: grid;
+  grid-template-columns: auto 1fr 2fr 2fr;
+  align-items: center;
+  gap: 8px;
+}
+
+.record-main > span {
+  padding-right: 8px;
+  border-right: 1px solid var(--color-gray-300);
+}
+
+.record-main > span:last-child {
+  border-right: none;
+}
+
+.item__speed {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+}
+.item__speed > .speed,
+.item__speed > .unit {
+  white-space: nowrap;
+}
+
+.record-memo {
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.item__memo {
+  flex: 1;
+  overflow: hidden;
+  max-height: 1.5em; /* 1行分 */
+  line-height: 1.5;
+  transition: max-height 0.25s ease;
+  margin: 0;
+  font-family: "BIZ UDPGothic", sans-serif;
+  font-size: var(--font-sm);
+  font-weight: 500;
+}
+
+.record-memo.expanded .item__memo {
+  max-height: 12em;
+}
+
+.memo-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.memo-toggle .material-symbols-outlined {
+  transition: transform 0.25s ease;
+}
+
+.record-memo.expanded .memo-toggle .material-symbols-outlined {
+  transform: rotate(180deg);
+}
+
+/* リンク */
+.link {
+  color: var(--color-primary-600);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.one-line-input {
+  padding: 12px;
+  border: 1px solid var(--color-gray-300);
+  border-radius: 8px;
+  width: 100%;
+  min-width: 0
+}

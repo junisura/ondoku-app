@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
+  <script type="module" src="./js/auth.js"></script>
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex, nofollow">
   <link rel="icon" href="favicon.ico">
@@ -9,68 +10,111 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
-  <link href="./css/common.css" rel="stylesheet">
-  <link href="./css/record-list.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+  <link href="./css/base.css" rel="stylesheet">
+  <link href="./css/components.css" rel="stylesheet">
+  <link href="./css/layout.css" rel="stylesheet">
+  <link href="./css/utilities.css" rel="stylesheet">
   <script type="module" src="./js/result.js"></script>
-  <title>音読アプリ - 結果</title>
-  <style>
-  </style>
+  <title>まいにち！ラピ読 - 結果</title>
 </head>
-<body>
-  <div id="result">
+<body class="page page--result">
 
-    <section id="session-summary">
-      <div>本日<span id="attempt"></span>回目 計測結果</div>
-      <div id="best" class="small good hidden">自己ベスト更新！</div>
-      <h1 id="last-record" class="score"></h1>
-    </section>
-    <section id="memo-section">
-      <input type="text" id="memo" placeholder="一言メモ" class="large"></input>
-      <p id="savedMemo" class="large"></p>
-      <button id="saveMemoBtn" class="compact">
-        <span class="material-symbols-outlined">edit_square</span>
-        <span class="label">保存</span>
-      </button>
-    </section>
-
-    <section id="summary" class="sub-area score hidden">
-      <div class="small">前回</div>
-      <div id="diff">
-        <span id="prev-speed"></span>
-      </div>
-      <div class="small" style="margin-top:0.5rem;">差分（今回−前回）</div>
-      <div id="diff">
-        <span id="prev-diff"></span>
-      </div>
-    </section>
-
-    <section id="record-list">
-      <div>各回の記録</div>
-      <div id="records"></div>
-    </section>
-
-    <section id="actions">
-      <button id="retryBtn">
-        <span class="material-symbols-outlined">refresh</span>
-        <span class="label">もう一度</span>
-      </button>
-      <button id="homeBtn" onclick="location.href='index.html'">
+  <!-- 共通ヘッダー -->
+  <header class="header">
+    <div class="header__inner">
+      <a href="index.html" class="btn btn--secondary header__back">
         <span class="material-symbols-outlined">home</span>
-        <span class="label">TOPへ</span>
-      </button>
+        <span class="btn__label">TOPへ</span>
+      </a>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- 今回結果 -->
+    <section class="card card--main">
+      <div class="card__header text-center">
+        <h2 class="card__title">今回の記録<span id="best-updated" class="font-small ml-8 text-success display-none">自己ベスト更新！</span></h2>
+      </div>
+      <div class="card__body text-center">
+        <div id="result__record" class="score l-inline-wrap flex-center-end">
+          <span id="last__time" class="result__time l-inline-nowrap">mi:ss.sss</span><wbr>
+          <span id="last__speed" class="result__speed l-inline-nowrap">（x.xx文字/秒）</span>
+        </div>
+      </div>
+
+      <div id="memo-area" class="card__body mt-8 flex-area-center">
+        <input type="text" id="memo__input" placeholder="一言メモ" maxlength="100" class="one-line-input">
+        <p id="memo__output"></p>
+        <button id="saveMemoBtn" class="btn btn--secondary no-wrap">
+          <span class="material-symbols-outlined">edit_square</span>
+          <span class="btn__label">保存</span>
+        </button>
+      </div>
     </section>
 
-  </div>
-  <template id="record-item-template">
-    <div class="record-item">
-      <div class="main-row score">
-        <span class="attempt"></span>
-        <span class="speed"></span>
-        <span class="time"></span>
+
+    <!-- 前回比較 -->
+    <section id="diff-card" class="card card--sub mt-16 display-none">
+      <div class="card__header">
+        <h3 class="card__title">前回の記録との比較</h3>
       </div>
-      <div class="memo"></div>
+      <div class="card__body">
+        <div class="result__row border-bottom">
+          <span>前回</span>
+          <span id="prev__time" class="font-large score">mi:ss.sss</span>
+          <span id="prev__speed">（x.xx文字/秒）</span>
+        </div>
+        <div class="result__diff text-center">
+          <span id="diff__time" class="score">S mi:ss.sss xxxx</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 本日の一覧 -->
+    <section class="card card--sub mt-16">
+      <div class="card__header">
+        <h3 class="card__title">本日の記録一覧</h3>
+      </div>
+
+      <ul id="records" class="list">
+      </ul>
+    </section>
+
+    <!-- アクション -->
+    <div class="mt-16">
+      <button id="retryBtn" class="btn btn--primary btn--block">
+        <span class="material-symbols-outlined">refresh</span>
+        <span class="btn__label">もう一度計測する</span>
+      </button>
     </div>
+
+    <div class="mt-8">
+      <a href="index.html" class="btn btn--secondary header__back btn--block">
+        <span class="material-symbols-outlined">home</span>
+        <span class="btn__label">TOPへ</span>
+      </a>
+    </div>
+
+  </main>
+
+  <template id="list-item-template">
+    <li class="list__item">
+      <div class="record-main">
+        <span class="item__best text-best font-small material-symbols-outlined">　</span>
+        <span class="item__timestamp text-center text-muted">hh:mi</span>
+        <span class="item__time score font-large">mi:ss.sss</span>
+        <span class="item__speed"><span class="speed score">x.xx</span><span class="unit font-small">文字/秒</span></span>
+      </div>
+      <div class="record-memo">
+        <p class="item__memo"></p>
+        <button class="memo-toggle" type="button">
+          <span class="material-symbols-outlined">expand_more</span>
+        </button>
+      </div>
+    </li>
   </template>
 </body>
 </html>

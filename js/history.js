@@ -1,7 +1,9 @@
-import { formatTimeMs, formatYMD, formatYMDhms } from "./date.js";
+import { formatYMD, formatJpMDA } from "./date.js";
 import { loadDateMap, loadRecords } from "./storage.js";
 import { loadContents, findContent } from "./contents.js";
-import { getTodayRecords, sortByCreatedAt, calcStreak } from "./records.js";
+import { getTodayRecords, getSortedByCreatedAt, calcStreak } from "./records.js";
+import { renderRecordList } from "./recordList.js";
+
 let today = new Date();
 let contents = null;
 let dateMap = {};
@@ -26,9 +28,9 @@ function renderCalendar() {
   const year = today.getFullYear();
   const month = today.getMonth();
 
-  document.getElementById("monthLabel").textContent = `${year} / ${month + 1}`;
+  document.getElementById("month-label").textContent = `${year}年${month + 1}月`;
 
-  const container = document.getElementById("calendar");
+  const container = document.getElementById("calendar-date");
   container.innerHTML = "";
 
   const firstDay = new Date(year, month, 1).getDay();
@@ -36,6 +38,7 @@ function renderCalendar() {
   const prevMonthDays = new Date(year, month, 0).getDate();
 
   const totalCells = Math.ceil((firstDay + daysInMonth) / 7) * 7;
+  todayStr = formatYMD(new Date().toISOString());
 
   for (let i = 0; i < totalCells; i++) {
     let day, cellMonth, isOtherMonth;
@@ -57,7 +60,6 @@ function renderCalendar() {
     const date = new Date(year, cellMonth, day);
     const dateStr = formatYMD(date);
 
-    todayStr = formatYMD(new Date().toISOString());
     const isToday = dateStr === todayStr;
     const isSelected = dateStr === selectedDate;
 
@@ -73,7 +75,7 @@ function renderCalendar() {
 
     div.textContent = day;
     div.dataset.date = dateStr;
-    div.onclick = () => onDateClick(dateStr, div);
+    div.addEventListener("click", () => onDateClick(dateStr, div));
 
     container.appendChild(div);
 
@@ -88,10 +90,10 @@ function renderStreak() {
   const streak = calcStreak(records);
 
   if (hasYesterday || hasToday) {
-    document.getElementById("streak").textContent = `${streak}日継続中！`;
+    document.getElementById("streak-days").textContent = streak;
   }
   if (!hasToday) {
-    document.getElementById("warning").classList.remove("hidden");
+    document.getElementById("warning").classList.remove("display-none");
   }
 }
 
@@ -102,9 +104,7 @@ function onDateClick(dateStr, el) {
     const prevEl = document.querySelector(`.day[data-date="${prevDateStr}"]`);
     if (prevEl) prevEl.classList.remove("selected");
   }
-  document.getElementById("title").textContent = "";
-  document.getElementById("genre").textContent = "";
-  document.getElementById("text").textContent = "";
+  document.getElementById("text-section").classList.add("display-none");
 
   // 2. 状態更新
   selectedDate = dateStr;
@@ -118,45 +118,36 @@ function onDateClick(dateStr, el) {
 
 function renderDetail(dateStr) {
   const recordContainer = document.getElementById("records");
-  const template = document.getElementById("record-item-template");
   recordContainer.innerHTML = "";
+  document.getElementById("record-date").textContent = formatJpMDA(dateStr);
 
-  const contentId = dateMap[dateStr];
-  const content = findContent(contents, contentId);
-  if (!content) {
-    recordContainer.textContent = "登録なし";
-    return;
-  }
+  // record（上）
+  const dayRecords = getTodayRecords(records, dateStr);
+  const sorted = getSortedByCreatedAt(dayRecords, true);
 
-  const dayRecords = getTodayRecords(records, selectedDate);
-  const sorted = sortByCreatedAt(dayRecords, true);
   if (dayRecords.length === 0) {
     recordContainer.textContent = "記録なし";
+    recordContainer.classList.remove("list");
     return;
+  } else {
+    recordContainer.classList.add("list");
+    // recordList.jsを呼ぶ
+    renderRecordList(sorted);
   }
 
-  // memo（上）
-  sorted.forEach((record, index) => {
-    const clone = template.content.cloneNode(true);
+  // text（下）
+  const contentId = dateMap[dateStr];
+  const content = findContent(contents, contentId);
 
-    clone.querySelector(".attempt").textContent = `${record.attempt_index}回目`;
-    clone.querySelector(".speed").textContent = `${record.speed.toFixed(2)}文字/秒`;
-    clone.querySelector(".time").textContent = `（${record.time_sec.toFixed(2)}秒）`;
+  if (content) {
+    document.getElementById("text-section").classList.remove("display-none");
+    document.getElementById("text-title").textContent = content.title;
+    document.getElementById("text-category").textContent = content.genre;
+    document.getElementById("text-body").textContent = content.text;
+  } else {
+    document.getElementById("text-section").classList.add("display-none");
+  }
 
-    const memoEl = clone.querySelector(".memo");
-    if (record.memo) {
-      memoEl.textContent = record.memo;
-    } else {
-      memoEl.style.display = "none";
-    }
-
-    recordContainer.appendChild(clone);
-  });
-
-  // content（下）
-  document.getElementById("title").textContent = content.title;
-  document.getElementById("genre").textContent = content.genre;
-  document.getElementById("text").textContent = content.text;
 }
 
 function prevYear() {
@@ -179,8 +170,10 @@ function nextYear() {
   renderCalendar();
 }
 
-init();
-window.addEventListener("DOMContentLoaded", () => {
+// メイン処理
+window.addEventListener("DOMContentLoaded", async () => {
+  await init();
+
   document.getElementById("prevYearBtn").addEventListener("click", prevYear);
   document.getElementById("prevMonthBtn").addEventListener("click", prevMonth);
   document.getElementById("nextMonthBtn").addEventListener("click", nextMonth);

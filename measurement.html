@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
+  <script type="module" src="./js/auth.js"></script>
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex, nofollow">
   <link rel="icon" href="favicon.ico">
@@ -9,88 +10,72 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
-  <link href="./css/common.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+  <link href="./css/base.css" rel="stylesheet">
+  <link href="./css/components.css" rel="stylesheet">
+  <link href="./css/layout.css" rel="stylesheet">
+  <link href="./css/utilities.css" rel="stylesheet">
+  <link href="./css/measurement.css" rel="stylesheet">
   <script type="module" src="./js/measurement.js"></script>
-  <title>音読アプリ - 計測</title>
-  <style>
-#title {
-  font-size: x-large;
-}
-
-#genre {
-  font-size: large;
-}
-
-#text {
-  line-height: 1.8;
-  font-size: large;
-  margin: 1em 0;
-  white-space: pre-wrap;
-}
-
-#timerBox {
-  position: fixed;
-  bottom: 0.0rem;
-  left: 0;
-  right: 0;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 0.5rem;
-
-  background-color: rgba(0, 0, 0, 0.75);
-  color: #fff;
-  padding: 0.5rem;
-}
-
-.timer-box button {
-  padding: 0.5rem;
-  width: 3rem;
-}
-
-#timerText {
-  font-size: xx-large;
-  font-family: "JetBrains Mono", monospace;
-  font-optical-sizing: auto;
-  font-weight: 600;
-  font-style: normal;
-  min-width: 90px;
-}
-#measurement {
-  padding-bottom: 5rem; /* timerの高さ分 */
-}
-  </style>
+  <title>まいにち！ラピ読 - 計測</title>
 </head>
-<body>
-  <div id="measurement">
-    <header id="actions">
-      <button id="backBtn" onclick="location.href='index.html'" class="compact">
-        <span class="material-symbols-outlined">arrow_back_2</span>
-        <span class="label">戻る</span>
-      </button>
-    </header>
+<body class="page page--measurement">
 
-    <section id="measurement-header" class="sub-area small">
-      <span id="attempt"></span>　<span id="prev-speed"></span>
+  <!-- 共通ヘッダー -->
+  <header class="header">
+    <div class="header__inner">
+      <a href="index.html" class="btn btn--secondary header__back">
+        <span class="material-symbols-outlined">home</span>
+        <span class="btn__label">TOPへ</span>
+      </a>
+    </div>
+  </header>
+
+  <main class="container pb-timer-space">
+
+    <!-- テキスト -->
+    <section class="card card--main">
+      <div class="card__header">
+        <h2 class="card__title">本日のテキスト</h2>
+        <span id="today-date" class="text-muted">m月d日（aaa）</span>
+      </div>
+
+      <div class="card__body">
+        <h3 id="text-title" class="text-title">テキストタイトル</h3>
+        <p id="text-category" class="text-category">テキストカテゴリ</p>
+        <p id="text-body" class="text-body">テキスト本文</p>
+
+        <p id="text-count" class="text-muted mt-8 text-right">文字数：xxx字</p>
+      </div>
     </section>
 
-    <main id="text-container">
-      <h1 id="title"></h1>
-      <h2 id="genre"></h2>
-      <p id="text"></p>
-    </main>
+    <!-- タイマーエリア -->
+    <section class="timer-box">
+      <div class="timer-row">
+        <div id="timer-value" class="timer__value">00:00.00</div>
+      </div>
+      <div class="control-row">
+        <button id="resetBtn" class="btn btn--secondary control__btn btn--reset">
+          <span class="material-symbols-outlined">replay</span>
+          <span class="btn__label">リセット</span>
+        </button>
 
-    <section id="timerBox" class="timer-box">
-      <button id="resetBtn" class="hidden material-symbols-outlined">replay</button>
-      <button id="startPauseBtn" class="material-symbols-outlined">play_arrow</button>
-      <span id="timerText">00:00.00</span>
-      <button id="stopBtn" class="hidden material-symbols-outlined">stop</button>
+        <div class="control__center">
+          <button id="startPauseBtn" class="btn btn--primary btn--large control__start">
+            <span class="material-symbols-outlined">play_arrow</span>
+            <span class="btn__label">開始</span>
+          </button>
+          <p class="control__hint mt-0">タップで開始・停止を切替</p>
+        </div>
+
+        <button id="stopBtn" class="btn btn--secondary control__btn btn--stop">
+          <span class="material-symbols-outlined">stop</span>
+          <span class="btn__label">終了</span>
+        </button>
+      </div>
     </section>
 
-  </div>
-<script type="module">
-</script>
+  </main>
 </body>
 </html>

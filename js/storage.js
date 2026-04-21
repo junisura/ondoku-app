@@ -4,7 +4,10 @@ const KEYS = {
 };
 
 export function loadRecords() {
-  return JSON.parse(localStorage.getItem(KEYS.RECORDS) || "[]");
+  return safeParse(
+    localStorage.getItem(KEYS.RECORDS),
+    []
+  );
 }
 
 export function saveRecords(records) {
@@ -12,9 +15,20 @@ export function saveRecords(records) {
 }
 
 export function loadDateMap() {
-  return JSON.parse(localStorage.getItem(KEYS.DATE_MAP) || "{}");
+  return safeParse(
+    localStorage.getItem(KEYS.DATE_MAP),
+    {}
+  );
 }
 
 export function saveDateMap(map) {
   localStorage.setItem(KEYS.DATE_MAP, JSON.stringify(map));
+}
+
+function safeParse(value, fallback) {
+  try {
+    return JSON.parse(value ?? JSON.stringify(fallback));
+  } catch {
+    return fallback;
+  }
 }

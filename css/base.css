@@ -1,0 +1,56 @@
+:root {
+  /* Primary */
+  --color-primary-900: #1E3A8A;
+  --color-primary-700: #1D4ED8;
+  --color-primary-600: #2563EB;
+  --color-primary-500: #3B82F6;
+  --color-primary-100: #DBEAFE;
+
+  /* Gray */
+  --color-gray-900: #111827;
+  --color-gray-700: #374151;
+  --color-gray-500: #6B7280;
+  --color-gray-300: #D1D5DB;
+  --color-gray-100: #F3F4F6;
+  --color-gray-50:  #F9FAFB;
+  --color-white:    #FFFFFF;
+
+  /* Success */
+  --color-success-700: #15803D;
+  --color-success-600: #16A34A;
+  --color-success-100: #DCFCE7;
+
+  /* Danger */
+  --color-danger-700: #B91C1C;
+  --color-danger-600: #DC2626;
+  --color-danger-100: #FEE2E2;
+
+  /* Accent */
+  --color-accent-700: #B45309;
+  --color-accent-500: #F59E0B;
+  --color-accent-100: #FEF3C7;
+  --color-accent-50: #FEF9E7;
+
+  --font-xxs: 0.6rem;
+  --font-xs: 0.75rem;  /* 12px */
+  --font-sm: 0.875rem; /* 14px */
+  --font-md: 1rem;     /* 16px */
+  --font-md-lg: 1.125rem; /* 18px */
+  --font-lg: 1.25rem;  /* 20px */
+  --font-xl-sm: 1.75rem;
+  --font-xl: 2rem;     /* 32px */
+  --font-xxl: 2.5rem;  /* タイマー */
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Noto Sans JP", "Inter", sans-serif;
+  background: var(--color-gray-50);
+  color: var(--color-gray-900);
+}

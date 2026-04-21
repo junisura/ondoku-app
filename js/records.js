@@ -2,7 +2,7 @@ export function getTodayRecords(records, today) {
   return records.filter(r => r.work_date === today);
 }
 
-export function sortByCreatedAt(records, isDesc = false) {
+export function getSortedByCreatedAt(records, isDesc = false) {
   const sorted = [...records].sort((a, b) =>
     a.created_at.localeCompare(b.created_at)
   );
@@ -32,6 +32,23 @@ export function calcSummary(records) {
   const avg = speeds.reduce((a, b) => a + b, 0) / count;
 
   return { count, max, avg };
+}
+
+export function getBestRecord(records) {
+  if (!records || records.length === 0) return null;
+
+  let best = records[0];
+
+  for (const r of records) {
+    if (
+      r.speed > best.speed ||
+      (r.speed === best.speed && r.created_at > best.created_at)
+    ) {
+      best = r;
+    }
+  }
+
+  return best;
 }
 
 export function generateId() {
