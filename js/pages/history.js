@@ -1,8 +1,8 @@
-import { getCurrentUser } from "./auth.js";
-import { formatYMD, formatJpMDA } from "./date.js";
-import { findTodayContent } from "./contents.js";
-import { getTodayRecords, getRecordsByPeriod, calcCurrentStreak, calcMaxStreak, getStreakContext } from "./records.js";
-import { renderRecordList } from "./recordList.js";
+import { getCurrentUser } from "../lib/auth.js";
+import { formatYMD, formatJpMDA } from "../lib/date.js";
+import { findTodayContent } from "../lib/contents.js";
+import { getTodayRecords, getRecordsByPeriod, calcCurrentStreak, calcMaxStreak, getStreakContext } from "../lib/records.js";
+import { renderRecordList } from "../lib/recordList.js";
 
 let today = new Date();
 let todayStr = "";

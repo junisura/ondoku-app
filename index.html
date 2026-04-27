@@ -16,7 +16,7 @@
   <link href="./css/layout.css" rel="stylesheet">
   <link href="./css/utilities.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script type="module" src="js/index.js"></script>
+  <script type="module" src="./js/pages/index.js"></script>
   <title>まいにち！ラピ読 - TOP</title>
 </head>
 <body class="page page--top">
@@ -63,7 +63,7 @@
 
     <!-- サブ導線 -->
     <div class="mt-8">
-      <a id="historyBtn" type="button" class="btn btn--secondary btn--block" href="history.html">
+      <a id="historyBtn" type="button" class="btn btn--secondary btn--block" href="./history.html">
         <span class="material-symbols-outlined">history_edu</span>
         <span class="btn__label">過去ログを見る</span>
       </a>
@@ -71,7 +71,10 @@
 
     <!-- 補助 -->
     <div class="mt-8 text-center">
-      <a href="howto.html" class="link">使い方・効果を見る</a>
+      <a id="historyBtn" type="button" class="btn btn--other btn--block" href="./howto.html">
+        <span class="material-symbols-outlined">help</span>
+        <span class="btn__label">使い方・高速音読について</span>
+      </a>
     </div>
 
   </main>

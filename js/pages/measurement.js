@@ -1,8 +1,8 @@
-import { getCurrentUser } from "./auth.js";
-import { formatYMD, guardSameDay, formatJpMDA, formatTimeMs } from "./date.js";
-import { findTodayContent } from "./contents.js";
-import { getTodayRecords, createRecord } from "./records.js";
-import { Timer } from "./timer.js";
+import { getCurrentUser } from "../lib/auth.js";
+import { formatYMD, guardSameDay, formatJpMDA, formatTimeMs } from "../lib/date.js";
+import { findTodayContent } from "../lib/contents.js";
+import { getTodayRecords, createRecord } from "../lib/records.js";
+import { Timer } from "../lib/timer.js";
 
 // 初期化
 let today;

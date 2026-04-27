@@ -1,7 +1,7 @@
-import { login, getCurrentUser } from "./auth.js";
-import { formatYMD, formatJpMDA, formatJpYMD } from "./date.js";
-import { findTodayContent } from "./contents.js";
-import { getBestRecord } from "./records.js";
+import { login, getCurrentUser } from "../lib/auth.js";
+import { formatYMD, formatJpMDA, formatJpYMD } from "../lib/date.js";
+import { findTodayContent } from "../lib/contents.js";
+import { getBestRecord } from "../lib/records.js";
 
 let today = "";
 

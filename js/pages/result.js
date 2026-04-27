@@ -1,8 +1,8 @@
-import { getCurrentUser } from "./auth.js";
-import { formatYMD, formatTimeMs } from "./date.js";
-import { guardTodayContent } from "./contents.js";
-import { findRecordById, getTodayRecords, getPrevRecord, getBestRecord, updateRecordMemo } from "./records.js";
-import { renderRecordList } from "./recordList.js";
+import { getCurrentUser } from "../lib/auth.js";
+import { formatYMD, formatTimeMs } from "../lib/date.js";
+import { guardTodayContent } from "../lib/contents.js";
+import { findRecordById, getTodayRecords, getPrevRecord, getBestRecord, updateRecordMemo } from "../lib/records.js";
+import { renderRecordList } from "../lib/recordList.js";
 
 // データ読み込み
 let lastRecId;
@@ -13,15 +13,9 @@ let memoOutput = null;
 
 // 初期化
 async function init() {
-console.log(location.href);
-console.log(location.search);
-
-const params = new URLSearchParams(location.search);
-console.log(params.get("rec_id"));
-
   const { user, error } = await getCurrentUser();
 
-//  const params = new URLSearchParams(location.search);
+  const params = new URLSearchParams(location.search);
   lastRecId = params.get("rec_id");
   if (!lastRecId) {
     alert("計測記録がありません。TOPに戻ります");
@@ -30,6 +24,7 @@ console.log(params.get("rec_id"));
   }
 
   const lastRec = await findRecordById(user.id, lastRecId);
+console.log(lastRec);
   today = lastRec.work_date;
   todayRecords = await getTodayRecords(user.id, today);
 
