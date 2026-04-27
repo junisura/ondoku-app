@@ -1,7 +1,7 @@
 import { getCurrentUser } from "../lib/auth.js";
-import { formatYMD, formatTimeMs } from "../lib/date.js";
-import { guardTodayContent } from "../lib/contents.js";
-import { findRecordById, getTodayRecords, getPrevRecord, getBestRecord, updateRecordMemo } from "../lib/records.js";
+import { formatMsToTime } from "../lib/date.js";
+import { validateContentForDate } from "../lib/contents.js";
+import { findRecordById, getRecordsByDate, getPrevRecord, getBestRecord, updateRecordMemo } from "../lib/records.js";
 import { renderRecordList } from "../lib/recordList.js";
 
 // データ読み込み
@@ -24,17 +24,16 @@ async function init() {
   }
 
   const lastRec = await findRecordById(user.id, lastRecId);
-console.log(lastRec);
   today = lastRec.work_date;
-  todayRecords = await getTodayRecords(user.id, today);
+  todayRecords = await getRecordsByDate(user.id, today);
 
-  const isValid = await guardTodayContent(lastRec.content_id, today);
+  const isValid = await validateContentForDate(lastRec.content_id, today);
   if (!isValid) {
     alert("データ不整合が発生しました。TOP画面からやり直してください。");
     location.href = "index.html";
   }
 
-  const lastTime = formatTimeMs(lastRec.time_sec);
+  const lastTime = formatMsToTime(lastRec.time_sec);
   document.getElementById("last__time").textContent = lastTime;
   document.getElementById("last__speed").textContent = `（${lastRec.speed.toFixed(2)}文字/秒）`;
 
@@ -42,19 +41,19 @@ console.log(lastRec);
   memoOutput = document.getElementById("memo__output");
   if (lastRec.memo) {
     memoOutput.textContent = `メモ：　${lastRec.memo}`;
-    switchMemoDisplay(true);
+    setMemoEditMode(true);
   }
 
   // 前回比較
   const prev = await getPrevRecord(user.id, lastRec);
   if (prev) {
     document.getElementById("diff-card").classList.remove("display-none");
-    document.getElementById("prev__time").textContent = formatTimeMs(prev.time_sec);
+    document.getElementById("prev__time").textContent = formatMsToTime(prev.time_sec);
     document.getElementById("prev__speed").textContent = `（${prev.speed.toFixed(2)}文字/秒）`;
 
     const diff = lastRec.time_sec - prev.time_sec;
     const diffTime = document.getElementById("diff__time");
-    const diffDisplay = getDiffDisplay(diff);
+    const diffDisplay = formatDiffText(diff);
 
     diffTime.textContent = diffDisplay.text;
     if (diffDisplay.className) {
@@ -72,23 +71,23 @@ console.log(lastRec);
   renderRecordList(todayRecords);
 }
 
-function getDiffDisplay(diff) {
+function formatDiffText(diff) {
   if (diff > 0) {
     return {
-      text: `${formatTimeMs(diff)} 速度DOWN...`,
+      text: `${formatMsToTime(diff)} 速度DOWN...`,
       className: "text-danger",
     };
   }
 
   if (diff < 0) {
     return {
-      text: `${formatTimeMs(diff)} 速度UP!`,
+      text: `${formatMsToTime(diff)} 速度UP!`,
       className: "text-success",
     };
   }
 
   return {
-    text: formatTimeMs(diff),
+    text: formatMsToTime(diff),
     className: "",
   };
 }
@@ -103,7 +102,7 @@ async function saveMemo() {
   await updateRecordMemo(user.id, lastRecId, memoInput.value);
 
   memoOutput.textContent = `メモ：　${memoInput.value}`;
-  switchMemoDisplay(true);
+  setMemoEditMode(true);
   alert("保存しました！");
 
   // 結果一覧を描画
@@ -116,7 +115,7 @@ function retry() {
   location.href = url.toString();
 };
 
-function switchMemoDisplay(isOutput) {
+function setMemoEditMode(isOutput) {
   if (isOutput) {
     document.getElementById("saveMemoBtn").classList.add("display-none");
     memoInput.classList.add("display-none");

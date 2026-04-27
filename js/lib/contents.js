@@ -1,7 +1,7 @@
-import { fetchContentId, fetchOneContent, fetchDailyContent } from "./repository.js";
+import { selectContentIdByDate, selectContentById, selectDailyContent } from "./repository.js";
 
-export async function getContentId(workDate) {
-  const { data, error } = await fetchContentId(workDate);
+export async function getContentIdByDate(workDate) {
+  const { data, error } = await selectContentIdByDate(workDate);
 
   if (error || !data) {
     console.error("contentID_not_found", { workDate, error });
@@ -10,8 +10,8 @@ export async function getContentId(workDate) {
   return data.content_id;
 }
 
-export async function findTodayContent(workDate) {
-  const { data, error } = await fetchDailyContent(workDate);
+export async function getContentByDate(workDate) {
+  const { data, error } = await selectDailyContent(workDate);
 
   if (error || !data) {
     console.error("content_not_found", { workDate, error });
@@ -20,8 +20,8 @@ export async function findTodayContent(workDate) {
   return data;
 }
 
-export async function guardTodayContent(contentId, workDate) {
-  const expected = await getContentId(workDate);
+export async function validateContentForDate(contentId, workDate) {
+  const expected = await getContentIdByDate(workDate);
   if (!contentId || Number(contentId) !== expected) {
     console.error("contentID_invalid", { contentId, workDate });
     return false;

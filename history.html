@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <script type="module" src="./js/auth.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex, nofollow">
@@ -48,11 +47,11 @@
     <section class="mt-16">
       <div class="card__header flex-center-center">
         <div class="calendar__nav flex-area-center">
-          <button id="prevYearBtn" type="button" class="btn btn--calendar material-symbols-outlined">keyboard_double_arrow_left</button>
-          <button id="prevMonthBtn" type="button" class="btn btn--calendar material-symbols-outlined">keyboard_arrow_left</button>
+          <button id="prevYearBtn" type="button" class="btn btn--calendar material-symbols-outlined" disabled>keyboard_double_arrow_left</button>
+          <button id="prevMonthBtn" type="button" class="btn btn--calendar material-symbols-outlined" disabled>keyboard_arrow_left</button>
           <span id="month-label" class="calendar__month">yyyy年m月</span>
-          <button id="nextMonthBtn" type="button" class="btn btn--calendar material-symbols-outlined">keyboard_arrow_right</button>
-          <button id="nextYearBtn" type="button" class="btn btn--calendar material-symbols-outlined">keyboard_double_arrow_right</button>
+          <button id="nextMonthBtn" type="button" class="btn btn--calendar material-symbols-outlined" disabled>keyboard_arrow_right</button>
+          <button id="nextYearBtn" type="button" class="btn btn--calendar material-symbols-outlined" disabled>keyboard_double_arrow_right</button>
         </div>
       </div>
 

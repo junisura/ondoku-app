@@ -1,4 +1,4 @@
-import { formatTimeMs, formatTimeHm } from "./date.js";
+import { formatMsToTime, formatISOToHM } from "./date.js";
 
 export function renderRecordList(records) {
   const list = document.getElementById("records");
@@ -6,7 +6,7 @@ export function renderRecordList(records) {
 
   list.innerHTML = "";
 
-  const bestRecord = findBestRecord(records);
+  const bestRecord = getBestRecordFromList(records);
 
   records.forEach((record) => {
     const clone = template.content.cloneNode(true);
@@ -19,14 +19,9 @@ export function renderRecordList(records) {
       clone.querySelector(".item__best").textContent = "crown";
     }
 
-    clone.querySelector(".item__timestamp").textContent =
-      formatTimeHm(record.created_at);
-
-    clone.querySelector(".item__time").textContent =
-      formatTimeMs(record.time_sec);
-
-    clone.querySelector(".speed").textContent =
-      record.speed.toFixed(2);
+    clone.querySelector(".item__timestamp").textContent = formatISOToHM(record.created_at);
+    clone.querySelector(".item__time").textContent = formatMsToTime(record.time_sec);
+    clone.querySelector(".speed").textContent = record.speed.toFixed(2);
 
     const memoEl = clone.querySelector(".item__memo");
     const toggleBtn = clone.querySelector(".memo-toggle");
@@ -51,7 +46,7 @@ export function renderRecordList(records) {
   });
 }
 
-function findBestRecord(records) {
+function getBestRecordFromList(records) {
   if (!records || records.length === 0) return null;
 
   return records.reduce((best, current) => {

@@ -1,0 +1,155 @@
+import { formatISOToYMD } from "./date.js";
+import { getRecordsByPeriod } from "./records.js";
+
+let today = new Date();
+let selectedDate = "";
+let onSelectDate = null;
+let currentUserId;
+const SERVICE_START_DATE = new Date("2026-04-01");
+
+export async function initCalendar(userId, callback) {
+  selectedDate = formatISOToYMD(new Date().toISOString()); // 初期値は当日
+  currentUserId = userId;
+  onSelectDate = callback;
+
+  await renderCalendar();
+
+  // 初期表示時も当日詳細を出す
+  await onSelectDate(selectedDate);
+}
+
+async function renderCalendar() {
+  const year = today.getFullYear();
+  const month = today.getMonth();
+
+  document.getElementById("month-label").textContent = `${year}年${month + 1}月`;
+
+  const container = document.getElementById("calendar-date");
+  container.innerHTML = "";
+
+  const firstDay = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const prevMonthDays = new Date(year, month, 0).getDate();
+
+  const totalCells = Math.ceil((firstDay + daysInMonth) / 7) * 7;
+  const todayStr = formatISOToYMD(new Date().toISOString());
+
+  const startDate = new Date(year, month, 1 - firstDay);
+  const endDate = new Date(year, month, daysInMonth + (totalCells - firstDay - daysInMonth));
+  const recordedDates = await getRecordsByPeriod(currentUserId, formatISOToYMD(startDate), formatISOToYMD(endDate));
+
+  for (let i = 0; i < totalCells; i++) {
+    let day, cellMonth, isOtherMonth;
+
+    if (i < firstDay) {
+      day = prevMonthDays - firstDay + i + 1;
+      cellMonth = month - 1;
+      isOtherMonth = true;
+    } else if (i >= firstDay + daysInMonth) {
+      day = i - (firstDay + daysInMonth) + 1;
+      cellMonth = month + 1;
+      isOtherMonth = true;
+    } else {
+      day = i - firstDay + 1;
+      cellMonth = month;
+      isOtherMonth = false;
+    }
+
+    const date = new Date(year, cellMonth, day);
+    const dateStr = formatISOToYMD(date);
+    const isToday = dateStr === todayStr;
+    const isSelected = dateStr === selectedDate;
+    const hasRecord = recordedDates.has(dateStr);
+    const div = document.createElement("div");
+
+    div.classList.add("day");
+    if (isOtherMonth) div.classList.add("other-month");
+    if (hasRecord) div.classList.add("has-record");
+    if (isToday) div.classList.add("today");
+    if (isSelected) div.classList.add("selected");
+
+    div.textContent = day;
+    div.dataset.date = dateStr;
+    div.addEventListener("click", () => handleDateClick(dateStr, div));
+
+    container.appendChild(div);
+
+  }
+
+  activateNaviButtons();
+}
+
+function handleDateClick(dateStr, el) {
+  // 直前の選択を解除
+  const prevDateStr = selectedDate;
+  if (prevDateStr) {
+    const prevEl = document.querySelector(`.day[data-date="${prevDateStr}"]`);
+    if (prevEl) prevEl.classList.remove("selected");
+  }
+  document.getElementById("text-section").classList.add("display-none");
+
+  // 状態を更新
+  selectedDate = dateStr;
+
+  // 新しい選択
+  el.classList.add("selected");
+
+  // 詳細描画
+  onSelectDate(dateStr);
+}
+
+function prevYear() {
+  today.setFullYear(today.getFullYear() - 1);
+  renderCalendar();
+}
+
+function prevMonth() {
+  today.setMonth(today.getMonth() - 1);
+  renderCalendar();
+}
+
+function nextMonth() {
+  today.setMonth(today.getMonth() + 1);
+  renderCalendar();
+}
+
+function nextYear() {
+  today.setFullYear(today.getFullYear() + 1);
+  renderCalendar();
+}
+
+function activateNaviButtons() {
+  const prevYearBtn = document.getElementById("prevYearBtn");
+  const prevMonthBtn = document.getElementById("prevMonthBtn");
+  const nextMonthBtn = document.getElementById("nextMonthBtn");
+  const nextYearBtn = document.getElementById("nextYearBtn");
+
+  // 現在表示月
+  const currentMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+
+  // サービス開始月（同じく月単位）
+  const serviceMonth = new Date(SERVICE_START_DATE.getFullYear(), SERVICE_START_DATE.getMonth(), 1);
+
+  // 未来月（今月まで）
+  const now = new Date();
+  const nowMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+
+  // 判定
+  const canGoPrev = currentMonth > serviceMonth;
+  const canGoNext = currentMonth < nowMonth;
+
+  // 状態反映
+  prevYearBtn.disabled = !canGoPrev;
+  prevMonthBtn.disabled = !canGoPrev;
+
+  nextMonthBtn.disabled = !canGoNext;
+  nextYearBtn.disabled = !canGoNext;
+}
+
+// メイン処理
+window.addEventListener("DOMContentLoaded", async () => {
+  document.getElementById("prevYearBtn").addEventListener("click", prevYear);
+  document.getElementById("prevMonthBtn").addEventListener("click", prevMonth);
+  document.getElementById("nextMonthBtn").addEventListener("click", nextMonth);
+  document.getElementById("nextYearBtn").addEventListener("click", nextYear);
+});

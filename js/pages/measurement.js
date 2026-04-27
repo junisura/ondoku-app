@@ -1,7 +1,7 @@
 import { getCurrentUser } from "../lib/auth.js";
-import { formatYMD, guardSameDay, formatJpMDA, formatTimeMs } from "../lib/date.js";
-import { findTodayContent } from "../lib/contents.js";
-import { getTodayRecords, createRecord } from "../lib/records.js";
+import { formatISOToYMD, isSameDay, formatYMDToJPMDA, formatMsToTime } from "../lib/date.js";
+import { getContentByDate } from "../lib/contents.js";
+import { getRecordsByDate, createRecord } from "../lib/records.js";
 import { Timer } from "../lib/timer.js";
 
 // 初期化
@@ -13,11 +13,11 @@ let spLabel;
 
 async function init() {
   const params = new URLSearchParams(location.search);
-  today = params.get("date") || formatYMD(new Date().toISOString());
-  guardSameDay(today);
+  today = params.get("date") || formatISOToYMD(new Date().toISOString());
+  isSameDay(today);
 
-  document.getElementById("today-date").textContent = formatJpMDA(today);
-  currentContent = await findTodayContent(today);
+  document.getElementById("today-date").textContent = formatYMDToJPMDA(today);
+  currentContent = await getContentByDate(today);
   if (currentContent) {
     document.getElementById("text-title").textContent = currentContent.contents.title;
     document.getElementById("text-category").textContent = currentContent.contents.category;
@@ -35,12 +35,12 @@ async function init() {
 function resetTimer() {
 
   Timer.reset();
-  updateStartPauseButton(false);
+  updateToggleButton(false);
   
   timerValue.textContent = "00:00.00";
 }
 
-function updateStartPauseButton(isRunning) {
+function updateToggleButton(isRunning) {
   if (isRunning) {
     spIcon.textContent = "pause";
     spLabel.textContent = "一時停止";
@@ -53,12 +53,12 @@ function updateStartPauseButton(isRunning) {
 function toggleTimer() {
   if (!Timer.isRunning) {
     Timer.start((elapsed) => {
-      timerValue.textContent = formatTimeMs(elapsed);
+      timerValue.textContent = formatMsToTime(elapsed);
     });
-    updateStartPauseButton(true);
+    updateToggleButton(true);
   } else {
     Timer.pause();
-    updateStartPauseButton(false);
+    updateToggleButton(false);
   }
 }
 
@@ -75,7 +75,7 @@ async function stopTimer() {
   // ゼロ除算回避
   if (time_sec <= 0) return;
 
-  const todayRecords = await getTodayRecords(user.id, today);
+  const todayRecords = await getRecordsByDate(user.id, today);
   const speed = currentContent.contents.char_count / time_sec;
   const record = {
     user_id: user.id,

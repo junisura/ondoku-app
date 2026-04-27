@@ -1,8 +1,8 @@
-import { fetchBestRecord, insertRecord, fetchRecordById, fetchDayRecords, findPreviousRecord, updateMemo, fetchRecordedDates } from "./repository.js";
-import { formatYMD } from "./date.js";
+import { selectBestRecord, insertRecord, selectRecordById, selectRecordsByDate, selectPreviousRecord, updateMemo, selectRecordedDates } from "./repository.js";
+import { formatISOToYMD } from "./date.js";
 
 export async function getBestRecord(userId) {
-  const { data, error } = await fetchBestRecord(userId);
+  const { data, error } = await selectBestRecord(userId);
   if (error) {
     console.error("best_records_fetch_error", { userId, error });
     return null;
@@ -22,7 +22,7 @@ export async function createRecord(record) {
 }
 
 export async function findRecordById(userId, recId) {
-  const { data, error } = await fetchRecordById(userId, recId);
+  const { data, error } = await selectRecordById(userId, recId);
 
   if (error || !data) {
     console.error("record_not_found", { userId, recId, error });
@@ -32,8 +32,8 @@ export async function findRecordById(userId, recId) {
   return data;
 }
 
-export async function getTodayRecords(userId, today) {
-  const { data, error } = await fetchDayRecords(userId, today);
+export async function getRecordsByDate(userId, today) {
+  const { data, error } = await selectRecordsByDate(userId, today);
 
   if (error) {
     console.error("records_fetch_error", { userId, today, error });
@@ -43,11 +43,11 @@ export async function getTodayRecords(userId, today) {
   return data;
 }
 
-export async function getPrevRecord(userId, recentRec) {
-  const { data, error } = await findPreviousRecord(userId, recentRec.created_at);
+export async function getPrevRecord(userId, currentRec) {
+  const { data, error } = await selectPreviousRecord(userId, currentRec.created_at);
 
   if (error) {
-    console.error("prev_record_fetch_error", { userId, recentRec, error });
+    console.error("prev_record_fetch_error", { userId, currentRec, error });
     return null;
   }
 
@@ -66,7 +66,7 @@ export async function updateRecordMemo(userId, recId, memo) {
 }
 
 export async function getRecordsByPeriod(userId, fromDate, toDate) {
-  const { data, error } = await fetchRecordedDates(userId, fromDate, toDate);
+  const { data, error } = await selectRecordedDates(userId, fromDate, toDate);
 
   if (error) {
     console.error("period_records_error", { userId, fromDate, toDate, error });
@@ -80,7 +80,7 @@ export async function getRecordsByPeriod(userId, fromDate, toDate) {
 export async function getStreakContext(userId, toDate) {
   const startDate = "2026-04-01";
 
-  const { data, error } = await fetchRecordedDates(userId, startDate, toDate);
+  const { data, error } = await selectRecordedDates(userId, startDate, toDate);
 
   if (error) {
     console.error("streak_context_error", error);
@@ -101,7 +101,7 @@ export async function calcCurrentStreak(userId, toDate) {
   let streak = 0;
   let cursor = new Date(toDate);
 
-  while (dateSet.has(formatYMD(cursor))) {
+  while (dateSet.has(formatISOToYMD(cursor))) {
     streak++;
     cursor.setDate(cursor.getDate() - 1);
   }

@@ -6,7 +6,7 @@ export const supabase = window.supabase.createClient(
   supabaseKey
 );
 
-export async function fetchOneContent(contentId) {
+export async function selectContentById(contentId) {
   return await supabase
     .from("contents")
     .select("*")
@@ -14,7 +14,7 @@ export async function fetchOneContent(contentId) {
     .single();
 }
 
-export async function fetchContentId(workDate) {
+export async function selectContentIdByDate(workDate) {
   return await supabase
     .from("daily_contents")
     .select("content_id")
@@ -22,7 +22,7 @@ export async function fetchContentId(workDate) {
     .single();
 }
 
-export async function fetchDailyContent(workDate) {
+export async function selectDailyContent(workDate) {
   return await supabase
     .from("daily_contents")
     .select(`
@@ -40,7 +40,7 @@ export async function fetchDailyContent(workDate) {
     .single();
 }
 
-export async function fetchRecordById(userId, recId) {
+export async function selectRecordById(userId, recId) {
   return await supabase
     .from("records")
     .select("*")
@@ -49,7 +49,7 @@ export async function fetchRecordById(userId, recId) {
     .single();
 }
 
-export async function fetchDayRecords(userId, workDate) {
+export async function selectRecordsByDate(userId, workDate) {
   return await supabase
     .from("records")
     .select("*")
@@ -76,7 +76,7 @@ export async function updateMemo(userId, recId, memo) {
     .eq("user_id", userId);
 }
 
-export async function fetchBestRecord(userId) {
+export async function selectBestRecord(userId) {
   return await supabase
     .from("records")
     .select("*")
@@ -88,7 +88,7 @@ export async function fetchBestRecord(userId) {
     .maybeSingle();
 }
 
-export async function findPreviousRecord(userId, createdAt) {
+export async function selectPreviousRecord(userId, createdAt) {
   const { data, error } = await supabase
     .from("records")
     .select("*")
@@ -102,7 +102,7 @@ export async function findPreviousRecord(userId, createdAt) {
   return { data, error };
 }
 
-export async function fetchRecordedDates(userId, fromDate, toDate) {
+export async function selectRecordedDates(userId, fromDate, toDate) {
   return await supabase
     .from("records")
     .select("work_date")
