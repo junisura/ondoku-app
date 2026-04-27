@@ -17,6 +17,7 @@
   <link href="./css/layout.css" rel="stylesheet">
   <link href="./css/utilities.css" rel="stylesheet">
   <script type="module" src="./js/result.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <title>まいにち！ラピ読 - 結果</title>
 </head>
 <body class="page page--result">
@@ -48,7 +49,7 @@
       <div id="memo-area" class="card__body mt-8 flex-area-center">
         <input type="text" id="memo__input" placeholder="一言メモ" maxlength="100" class="one-line-input">
         <p id="memo__output"></p>
-        <button id="saveMemoBtn" class="btn btn--secondary no-wrap">
+        <button id="saveMemoBtn" type="button" class="btn btn--other no-wrap">
           <span class="material-symbols-outlined">edit_square</span>
           <span class="btn__label">保存</span>
         </button>

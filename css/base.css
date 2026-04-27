@@ -1,36 +1,29 @@
 :root {
-  /* Primary */
-  --color-primary-900: #1E3A8A;
-  --color-primary-700: #1D4ED8;
-  --color-primary-600: #2563EB;
-  --color-primary-500: #3B82F6;
-  --color-primary-100: #DBEAFE;
 
-  /* Gray */
-  --color-gray-900: #111827;
-  --color-gray-700: #374151;
-  --color-gray-500: #6B7280;
-  --color-gray-300: #D1D5DB;
-  --color-gray-100: #F3F4F6;
-  --color-gray-50:  #F9FAFB;
-  --color-white:    #FFFFFF;
+  /* 文字色 */
+  --color-text-main: #5A3A28;	/* 茶 */
+  --color-text-sub: #2D78B7;	/* 青 */
 
-  /* Success */
-  --color-success-700: #15803D;
-  --color-success-600: #16A34A;
-  --color-success-100: #DCFCE7;
+  /* 背景色 */
+  --color-bg-base: #BFE3F7;		/* 水色 */
+  --color-bg-main: #F7F1E3;		/* アイボリー */
+  --color-bg-sub: #FFFDF8;		/* オフホワイト */
+  --color-bg-calendar: #F8F4EA;	/* アイボリー */
+  --color-bg-best: #FEF3C7;		/* アイボリー */
 
-  /* Danger */
-  --color-danger-700: #B91C1C;
-  --color-danger-600: #DC2626;
-  --color-danger-100: #FEE2E2;
+  /* ボタン色 */
+  --color-button-main: #2D78B7;		/* 青 */
+  --color-button-sub: #5CB7E8;		/* 水色 */
+  --color-button-danger: #E85B47;	/* 朱色 */
+  --color-button-other: #79B84D;	/* 緑 */
 
-  /* Accent */
-  --color-accent-700: #B45309;
-  --color-accent-500: #F59E0B;
-  --color-accent-100: #FEF3C7;
-  --color-accent-50: #FEF9E7;
+  /* その他汎用 */
+  --color-common-white: #FFFDF8;		/* 白 */
+  --color-common-gray-high: #B8ABA6;	/* 灰色 */
+  --color-common-gray-low: #7B675A;		/* 灰色 */
+  --color-common-accent: #F59A2A;		/* オレンジ */
 
+  /* フォントサイズ */
   --font-xxs: 0.6rem;
   --font-xs: 0.75rem;  /* 12px */
   --font-sm: 0.875rem; /* 14px */
@@ -51,6 +44,6 @@
 body {
   margin: 0;
   font-family: "Noto Sans JP", "Inter", sans-serif;
-  background: var(--color-gray-50);
-  color: var(--color-gray-900);
+  background: var(--color-bg-base);
+  color: var(--color-text-main);
 }

@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <script type="module" src="./js/auth.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex, nofollow">
@@ -11,11 +10,12 @@
   <link href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&icon_names=home,play_arrow,pause,stop,replay,refresh,import_contacts,history_edu,edit_square,keyboard_arrow_left,keyboard_arrow_right,keyboard_double_arrow_left,keyboard_double_arrow_right" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
   <link href="./css/base.css" rel="stylesheet">
   <link href="./css/components.css" rel="stylesheet">
   <link href="./css/layout.css" rel="stylesheet">
   <link href="./css/utilities.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script type="module" src="js/index.js"></script>
   <title>まいにち！ラピ読 - TOP</title>
 </head>
@@ -55,7 +55,7 @@
 
     <!-- CTA -->
     <div class="mt-16">
-      <button id="openBtn" class="btn btn--primary btn--block">
+      <button id="openBtn" type="button" class="btn btn--primary btn--block">
         <span class="material-symbols-outlined">import_contacts</span>
         <span class="btn__label">テキストを開く</span>
       </button>
@@ -63,7 +63,7 @@
 
     <!-- サブ導線 -->
     <div class="mt-8">
-      <a id="historyBtn" class="btn btn--secondary btn--block" href="history.html">
+      <a id="historyBtn" type="button" class="btn btn--secondary btn--block" href="history.html">
         <span class="material-symbols-outlined">history_edu</span>
         <span class="btn__label">過去ログを見る</span>
       </a>

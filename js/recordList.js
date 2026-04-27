@@ -1,5 +1,4 @@
 import { formatTimeMs, formatTimeHm } from "./date.js";
-import { getBestRecord, getSortedByCreatedAt } from "./records.js";
 
 export function renderRecordList(records) {
   const list = document.getElementById("records");
@@ -7,10 +6,9 @@ export function renderRecordList(records) {
 
   list.innerHTML = "";
 
-  const bestRecord = getBestRecord(records);
-  const sorted = getSortedByCreatedAt(records, true);
+  const bestRecord = findBestRecord(records);
 
-  sorted.forEach((record) => {
+  records.forEach((record) => {
     const clone = template.content.cloneNode(true);
 
     if (
@@ -50,5 +48,13 @@ export function renderRecordList(records) {
     }
 
     list.appendChild(clone);
+  });
+}
+
+function findBestRecord(records) {
+  if (!records || records.length === 0) return null;
+
+  return records.reduce((best, current) => {
+    return current.speed > best.speed ? current : best;
   });
 }

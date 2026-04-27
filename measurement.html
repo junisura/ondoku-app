@@ -18,6 +18,7 @@
   <link href="./css/utilities.css" rel="stylesheet">
   <link href="./css/measurement.css" rel="stylesheet">
   <script type="module" src="./js/measurement.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <title>まいにち！ラピ読 - 計測</title>
 </head>
 <body class="page page--measurement">
@@ -56,20 +57,20 @@
         <div id="timer-value" class="timer__value">00:00.00</div>
       </div>
       <div class="control-row">
-        <button id="resetBtn" class="btn btn--secondary control__btn btn--reset">
+        <button id="resetBtn" type="button" class="btn btn--secondary control__btn btn--reset">
           <span class="material-symbols-outlined">replay</span>
           <span class="btn__label">リセット</span>
         </button>
 
         <div class="control__center">
-          <button id="startPauseBtn" class="btn btn--primary btn--large control__start">
+          <button id="startPauseBtn" type="button" class="btn btn--primary btn--large control__start">
             <span class="material-symbols-outlined">play_arrow</span>
             <span class="btn__label">開始</span>
           </button>
           <p class="control__hint mt-0">タップで開始・停止を切替</p>
         </div>
 
-        <button id="stopBtn" class="btn btn--secondary control__btn btn--stop">
+        <button id="stopBtn" type="button" class="btn btn--secondary control__btn btn--stop">
           <span class="material-symbols-outlined">stop</span>
           <span class="btn__label">終了</span>
         </button>

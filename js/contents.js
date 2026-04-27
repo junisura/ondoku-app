@@ -1,51 +1,31 @@
-import { loadDateMap } from "./storage.js";
+import { fetchContentId, fetchOneContent, fetchDailyContent } from "./repository.js";
 
-export async function loadContents() {
-  const res = await fetch("./contents.json");
-  return res.json();
-}
+export async function getContentId(workDate) {
+  const { data, error } = await fetchContentId(workDate);
 
-export function findContent(contents, contentId) {
-  return contents.find(c => c.id === contentId);
-}
-
-// 指定日のdateMapが無かった時に最大値+1で追加
-export function ensureTodayContent(dateMap, contents, workDate) {
-  if (!dateMap[workDate]) {
-    const dates = Object.keys(dateMap);
-    let nextContentId = 1;
-
-    if (dates.length > 0) {
-      const latest = dates.sort().reverse()[0];
-      nextContentId = dateMap[latest] + 1;
-    }
-
-    if (nextContentId > contents.length) {
-      console.error("contents.json is missing next content");
-      alert("現在この日の教材を準備中です");
-      location.href = "index.html";
-      return null;
-    }
-
-    dateMap[workDate] = nextContentId;
+  if (error || !data) {
+    console.error("contentID_not_found", { workDate, error });
   }
 
-  return dateMap[workDate];
+  return data.content_id;
 }
 
-export function getContentId(workDate) {
-  const map = loadDateMap();
-  return map[workDate];
+export async function findTodayContent(workDate) {
+  const { data, error } = await fetchDailyContent(workDate);
+
+  if (error || !data) {
+    console.error("content_not_found", { workDate, error });
+  }
+  // dataの中身： {work_date, content_id, contents}
+  return data;
 }
 
-export function guardTodayContent(contentId, workDate) {
-  const expected = getContentId(workDate);
-
-  if (!contentId || contentId !== expected) {
-    alert("無効なコンテンツです");
-    location.href = "index.html";
+export async function guardTodayContent(contentId, workDate) {
+  const expected = await getContentId(workDate);
+  if (!contentId || Number(contentId) !== expected) {
+    console.error("contentID_invalid", { contentId, workDate });
     return false;
   }
-
+  
   return true;
 }

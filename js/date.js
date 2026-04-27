@@ -17,28 +17,6 @@ export function formatTimeMs(sec) {
   return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}.${String(ms).padStart(2, "0")}`;
 }
 
-export function formatYMDhms(iso) {
-  const date = new Date(iso);
-
-  const parts = new Intl.DateTimeFormat("ja-JP", {
-    timeZone: "Asia/Tokyo",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-    hour12: false
-  }).formatToParts(date);
-
-  const map = {};
-  for (const p of parts) {
-    map[p.type] = p.value;
-  }
-
-  return `${map.year}-${map.month}-${map.day} ${map.hour}:${map.minute}:${map.second}`;
-}
-
 export function formatYMD(iso) {
   const date = new Date(iso);
 
@@ -115,6 +93,7 @@ export function guardSameDay(workDate) {
   const today = formatYMD(new Date().toISOString());
 
   if (!workDate || workDate !== today) {
+    console.error("content_id_invalid", { contentId, workDate, expected });
     alert("日付が変わったためセッションを終了します");
     location.href = "index.html";
     return false;

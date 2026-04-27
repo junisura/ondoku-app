@@ -1,36 +1,34 @@
-import { formatYMD, formatJpMDA, formatTimeMs, guardSameDay } from "./date.js";
-import { loadDateMap, loadRecords, saveRecords } from "./storage.js";
-import { loadContents, findContent, guardTodayContent } from "./contents.js";
-import { getTodayRecords, generateId } from "./records.js";
+import { getCurrentUser } from "./auth.js";
+import { formatYMD, guardSameDay, formatJpMDA, formatTimeMs } from "./date.js";
+import { findTodayContent } from "./contents.js";
+import { getTodayRecords, createRecord } from "./records.js";
 import { Timer } from "./timer.js";
 
 // 初期化
-const params = new URLSearchParams(location.search);
-const today = params.get("date") || formatYMD(new Date().toISOString());
-const dateMap = loadDateMap();
-guardSameDay(today);
-
-let current;
+let today;
+let currentContent;
 let timerValue;
-let startPauseBtn;
-let stopBtn;
-let resetBtn;
 let spIcon;
 let spLabel;
 
 async function init() {
-  const contents = await loadContents();
+  const params = new URLSearchParams(location.search);
+  today = params.get("date") || formatYMD(new Date().toISOString());
+  guardSameDay(today);
 
-  const contentId = dateMap[today];
-  current = findContent(contents, contentId);
-  if (!guardTodayContent(contentId, today)) return;
-
-  // DOM反映
   document.getElementById("today-date").textContent = formatJpMDA(today);
-  document.getElementById("text-title").textContent = current.title;
-  document.getElementById("text-category").textContent = current.genre;
-  document.getElementById("text-body").textContent = current.text;
-  document.getElementById("text-count").textContent = `文字数：${current.char_count}字`;
+  currentContent = await findTodayContent(today);
+  if (currentContent) {
+    document.getElementById("text-title").textContent = currentContent.contents.title;
+    document.getElementById("text-category").textContent = currentContent.contents.category;
+    document.getElementById("text-body").textContent = currentContent.contents.text_body.replace(/\\n/g, "\n");
+    document.getElementById("text-count").textContent = `文字数：${currentContent.contents.char_count}字`;
+  } else {
+    alert("教材の取得に失敗しました。恐れ入りますがTOP画面からやり直してください。");
+    location.href = "index.html";
+    return;
+  }
+
 }
 
 // タイマー制御
@@ -64,43 +62,49 @@ function toggleTimer() {
   }
 }
 
-function stopTimer() {
+async function stopTimer() {
   if (!Timer.startTime && Timer.elapsedBeforePause === 0) return;
+  const { user, error } = await getCurrentUser();
+  if (!user) {
+    alert("ログインが必要です");
+    return;
+  }
 
   const time_sec = Timer.stop();
 
   // ゼロ除算回避
   if (time_sec <= 0) return;
 
-  // 最新のレコードを取得
-  const records = loadRecords();
-  const todayRecords = getTodayRecords(records, today);
-
-  const speed = current.char_count / time_sec;
+  const todayRecords = await getTodayRecords(user.id, today);
+  const speed = currentContent.contents.char_count / time_sec;
   const record = {
-    id: generateId(),
-    content_id: current.id,
+    user_id: user.id,
+    content_id: currentContent.content_id,
     work_date: today,
     attempt_index: todayRecords.length + 1,
     time_sec: time_sec,
     speed: speed,
-    memo: "",
-    created_at: new Date().toISOString(),
+    memo: ""
   };
 
-  records.push(record);
-  saveRecords(records);
-
-  location.href = `result.html?date=${today}`;
+  try {
+    const rec = await createRecord(record);
+    location.href = `result.html?rec_id=${rec.id}`;
+  } catch (error) {
+    console.error(error);
+    alert("記録に失敗しました。恐れ入りますが計測をやり直してください。");
+    location.href = "index.html";
+    return false;
+  }
 }
 
 // メイン処理
 window.addEventListener("DOMContentLoaded", async () => {
   await init();
 
-  startPauseBtn = document.getElementById("startPauseBtn");
-  stopBtn = document.getElementById("stopBtn");
-  resetBtn = document.getElementById("resetBtn");
+  const startPauseBtn = document.getElementById("startPauseBtn");
+  const stopBtn = document.getElementById("stopBtn");
+  const resetBtn = document.getElementById("resetBtn");
   timerValue = document.getElementById("timer-value");
 
   spIcon = startPauseBtn.querySelector(".material-symbols-outlined");

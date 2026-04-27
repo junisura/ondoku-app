@@ -1,30 +1,25 @@
+import { getCurrentUser } from "./auth.js";
 import { formatYMD, formatJpMDA } from "./date.js";
-import { loadDateMap, loadRecords } from "./storage.js";
-import { loadContents, findContent } from "./contents.js";
-import { getTodayRecords, getSortedByCreatedAt, calcStreak } from "./records.js";
+import { findTodayContent } from "./contents.js";
+import { getTodayRecords, getRecordsByPeriod, calcCurrentStreak, calcMaxStreak, getStreakContext } from "./records.js";
 import { renderRecordList } from "./recordList.js";
 
 let today = new Date();
-let contents = null;
-let dateMap = {};
-let records = [];
 let todayStr = "";
 
 let selectedDate = formatYMD(new Date().toISOString()); // 初期値は当日
 
 // 初期化
 async function init() {
-  // データ読み込み
-  contents = await loadContents();
-  dateMap = loadDateMap();
-  records = loadRecords();
+  const { user, error } = await getCurrentUser();
+  todayStr = formatYMD(today.toISOString());
 
-  renderCalendar();           // selected反映
-  renderStreak();
-  renderDetail(selectedDate); // 詳細表示
+  renderCalendar(user.id);           // selected反映
+  renderStreak(user.id);
+  renderDetail(user.id, selectedDate); // 詳細表示
 }
 
-function renderCalendar() {
+async function renderCalendar(userId) {
   const year = today.getFullYear();
   const month = today.getMonth();
 
@@ -39,6 +34,10 @@ function renderCalendar() {
 
   const totalCells = Math.ceil((firstDay + daysInMonth) / 7) * 7;
   todayStr = formatYMD(new Date().toISOString());
+
+  const startDate = new Date(year, month, 1 - firstDay);
+  const endDate = new Date(year, month, daysInMonth + (totalCells - firstDay - daysInMonth));
+  const recordedDates = await getRecordsByPeriod(userId, formatYMD(startDate), formatYMD(endDate));
 
   for (let i = 0; i < totalCells; i++) {
     let day, cellMonth, isOtherMonth;
@@ -59,12 +58,9 @@ function renderCalendar() {
 
     const date = new Date(year, cellMonth, day);
     const dateStr = formatYMD(date);
-
     const isToday = dateStr === todayStr;
     const isSelected = dateStr === selectedDate;
-
-    const hasRecord = records.some(r => r.work_date === dateStr);
-
+    const hasRecord = recordedDates.has(dateStr);
     const div = document.createElement("div");
 
     div.classList.add("day");
@@ -75,30 +71,54 @@ function renderCalendar() {
 
     div.textContent = day;
     div.dataset.date = dateStr;
-    div.addEventListener("click", () => onDateClick(dateStr, div));
+    div.addEventListener("click", () => onDateClick(userId, dateStr, div));
 
     container.appendChild(div);
 
   }
 }
 
-function renderStreak() {
-  const yesterday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1);
-  const yesterdayStr = formatYMD(yesterday.toISOString());
-  const hasYesterday = records.some(r => r.work_date === yesterdayStr);
-  const hasToday = records.some(r => r.work_date === todayStr);
-  const streak = calcStreak(records);
+export async function renderStreak(userId) {
+  const today = new Date();
+  const todayStr = formatYMD(today.toISOString());
 
-  if (hasYesterday || hasToday) {
-    document.getElementById("streak-days").textContent = streak;
+  const yesterday = new Date();
+  yesterday.setDate(today.getDate() - 1);
+  const yesterdayStr = formatYMD(yesterday.toISOString());
+
+  const streakBase = await calcCurrentStreak(userId, yesterdayStr);
+  const max = await calcMaxStreak(userId, todayStr);
+  const ctx = await getStreakContext(userId, todayStr);
+  if (!ctx) return;
+  const { dateSet } = ctx;
+  const hasToday = dateSet.has(todayStr);
+  const hasYesterday = dateSet.has(yesterdayStr);
+
+  const streak = hasToday ? (streakBase + 1) : streakBase;
+
+  const streakEl = document.getElementById("streak-days");
+  const maxEl = document.getElementById("max-streak-days");
+  const warningEl = document.getElementById("warning");
+
+  // 現在記録
+  if (Number(streak) > 0) {
+    streakEl.textContent = `${streak}日継続中！`;
+  } else {
+    streakEl.textContent = `現在 0日`;
   }
+
+  // 最長記録
+  maxEl.textContent = `最長 ${max}日`;
+
   if (!hasToday) {
-    document.getElementById("warning").classList.remove("display-none");
+    warningEl.classList.remove("display-none");
+  } else {
+    warningEl.classList.add("display-none");
   }
 }
 
-function onDateClick(dateStr, el) {
-  // 1. 直前選択を解除
+function onDateClick(userId, dateStr, el) {
+  // 直前の選択を解除
   const prevDateStr = selectedDate;
   if (prevDateStr) {
     const prevEl = document.querySelector(`.day[data-date="${prevDateStr}"]`);
@@ -106,24 +126,23 @@ function onDateClick(dateStr, el) {
   }
   document.getElementById("text-section").classList.add("display-none");
 
-  // 2. 状態更新
+  // 状態を更新
   selectedDate = dateStr;
 
-  // 3. 新しい選択
+  // 新しい選択
   el.classList.add("selected");
 
-  // 4. 詳細
-  renderDetail(dateStr);
+  // 詳細描画
+  renderDetail(userId, dateStr);
 }
 
-function renderDetail(dateStr) {
+async function renderDetail(userId, dateStr) {
   const recordContainer = document.getElementById("records");
   recordContainer.innerHTML = "";
   document.getElementById("record-date").textContent = formatJpMDA(dateStr);
 
   // record（上）
-  const dayRecords = getTodayRecords(records, dateStr);
-  const sorted = getSortedByCreatedAt(dayRecords, true);
+  const dayRecords = await getTodayRecords(userId, dateStr);
 
   if (dayRecords.length === 0) {
     recordContainer.textContent = "記録なし";
@@ -131,21 +150,21 @@ function renderDetail(dateStr) {
     return;
   } else {
     recordContainer.classList.add("list");
-    // recordList.jsを呼ぶ
-    renderRecordList(sorted);
+
+    // 結果一覧を描画
+    renderRecordList(dayRecords);
   }
 
   // text（下）
-  const contentId = dateMap[dateStr];
-  const content = findContent(contents, contentId);
-
-  if (content) {
-    document.getElementById("text-section").classList.remove("display-none");
-    document.getElementById("text-title").textContent = content.title;
-    document.getElementById("text-category").textContent = content.genre;
-    document.getElementById("text-body").textContent = content.text;
+  document.getElementById("text-section").classList.remove("display-none");
+  const currentContent = await findTodayContent(dateStr);
+  if (currentContent) {
+    document.getElementById("text-title").textContent = currentContent.contents.title;
+    document.getElementById("text-category").textContent = currentContent.contents.category;
+    document.getElementById("text-body").textContent = currentContent.contents.text_body.replace(/\\n/g, "\n");
   } else {
-    document.getElementById("text-section").classList.add("display-none");
+    document.getElementById("text-title").textContent = "（教材取得失敗）";
+    document.getElementById("text-body").classList.add("display-none");
   }
 
 }

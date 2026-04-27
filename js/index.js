@@ -1,28 +1,28 @@
-import { formatYMD, formatJpYMD, formatJpMDA } from "./date.js";
-import { loadDateMap, saveDateMap, loadRecords } from "./storage.js";
-import { loadContents, findContent, ensureTodayContent } from "./contents.js";
+import { login, getCurrentUser } from "./auth.js";
+import { formatYMD, formatJpMDA, formatJpYMD } from "./date.js";
+import { findTodayContent } from "./contents.js";
 import { getBestRecord } from "./records.js";
 
 let today = "";
 
 async function init() {
-  // データ読み込み
-  const contents = await loadContents();
-  const dateMap = loadDateMap();
-  const records = loadRecords();
+  await login("junisura@yahoo.co.jp", "ondock2026");
+  const { user, error } = await getCurrentUser();
 
   today = formatYMD(new Date().toISOString());
-  const contentId = ensureTodayContent(dateMap, contents, today);
-  if (!contentId) return;
-  saveDateMap(dateMap);
-
-  const current = findContent(contents, contentId);
-  const bestRecord = getBestRecord(records);
-
-  // DOM反映
   document.getElementById("today-date").textContent = formatJpMDA(today);
-  document.getElementById("text-title").textContent = current.title;
-  document.getElementById("text-category").textContent = current.genre;
+
+  const currentContent = await findTodayContent(today);
+  if (currentContent) {
+    document.getElementById("text-title").textContent = currentContent.contents.title;
+    document.getElementById("text-category").textContent = currentContent.contents.category;
+  } else {
+    document.getElementById("text-title").textContent = "（教材取得失敗）";
+    document.getElementById("text-category").textContent = "";
+    document.getElementById("openBtn").disabled = true;
+  }
+
+  const bestRecord = await getBestRecord(user.id);
   if (bestRecord) {
     document.getElementById("best-record-section").classList.remove("display-none");
     document.getElementById("best-record").textContent = 

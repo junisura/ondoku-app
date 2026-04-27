@@ -1,16 +1,28 @@
-const KEY = "rapidoku_auth";
-const PASS = atob("b25kb2NrMjAyNg==");
+import { supabase } from "./repository.js";
 
-(function () {
-  // すでに通過済みなら何もしない
-  if (localStorage.getItem(KEY) === "1") return;
+export async function signUp(email, password) {
+  return await supabase.auth.signUp({
+    email,
+    password,
+  });
+}
 
-  while (true) {
-    const input = prompt("パスワードを入力");
+export async function login(email, password) {
+  return await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
+}
 
-    if (input === PASS) {
-      localStorage.setItem(KEY, "1");
-      break;
-    }
-  }
-})();
+export async function logout() {
+  return await supabase.auth.signOut();
+}
+
+export async function getCurrentUser() {
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
+
+  return { user, error };
+}
