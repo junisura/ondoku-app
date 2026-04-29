@@ -5,7 +5,7 @@ export function parseYMD(ymd) {
   return new Date(year, month - 1, day);
 }
 
-export function formatTimeMs(sec) {
+export function formatMsToTime(sec) {
   // const sign = sec < 0 ? "-" : "";
   const abs = Math.abs(sec);
 
@@ -17,29 +17,7 @@ export function formatTimeMs(sec) {
   return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}.${String(ms).padStart(2, "0")}`;
 }
 
-export function formatYMDhms(iso) {
-  const date = new Date(iso);
-
-  const parts = new Intl.DateTimeFormat("ja-JP", {
-    timeZone: "Asia/Tokyo",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-    hour12: false
-  }).formatToParts(date);
-
-  const map = {};
-  for (const p of parts) {
-    map[p.type] = p.value;
-  }
-
-  return `${map.year}-${map.month}-${map.day} ${map.hour}:${map.minute}:${map.second}`;
-}
-
-export function formatYMD(iso) {
+export function formatISOToYMD(iso) {
   const date = new Date(iso);
 
   const parts = new Intl.DateTimeFormat("ja-JP", {
@@ -57,7 +35,7 @@ export function formatYMD(iso) {
   return `${map.year}-${map.month}-${map.day}`;
 }
 
-export function formatTimeHm(iso) {
+export function formatISOToHM(iso) {
   const date = new Date(iso);
 
   const parts = new Intl.DateTimeFormat("ja-JP", {
@@ -75,7 +53,7 @@ export function formatTimeHm(iso) {
   return `${map.hour}:${map.minute}`;
 }
 
-export function formatJpYMD(ymd) {
+export function formatYMDToJP(ymd) {
   const date = parseYMD(ymd);
 
   const parts = new Intl.DateTimeFormat("ja-JP", {
@@ -93,7 +71,7 @@ export function formatJpYMD(ymd) {
   return `${map.year}年${map.month}月${map.day}日`;
 }
 
-export function formatJpMDA(ymd) {
+export function formatYMDToJPMDA(ymd) {
   const date = parseYMD(ymd);
 
   const parts = new Intl.DateTimeFormat("ja-JP", {
@@ -111,10 +89,11 @@ export function formatJpMDA(ymd) {
   return `${map.month}月${map.day}日（${map.weekday}）`;
 }
 
-export function guardSameDay(workDate) {
-  const today = formatYMD(new Date().toISOString());
+export function isSameDay(workDate) {
+  const today = formatISOToYMD(new Date().toISOString());
 
   if (!workDate || workDate !== today) {
+    console.error("content_id_invalid", { contentId, workDate, expected });
     alert("日付が変わったためセッションを終了します");
     location.href = "index.html";
     return false;

@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <script type="module" src="./js/auth.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex, nofollow">
@@ -17,7 +16,8 @@
   <link href="./css/layout.css" rel="stylesheet">
   <link href="./css/utilities.css" rel="stylesheet">
   <link href="./css/measurement.css" rel="stylesheet">
-  <script type="module" src="./js/measurement.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script type="module" src="./js/pages/measurement.js"></script>
   <title>まいにち！ラピ読 - 計測</title>
 </head>
 <body class="page page--measurement">
@@ -29,6 +29,7 @@
         <span class="material-symbols-outlined">home</span>
         <span class="btn__label">TOPへ</span>
       </a>
+      <img src="./img/rapidoku_logo_mini.png" height="40px" alt="">
     </div>
   </header>
 
@@ -38,15 +39,15 @@
     <section class="card card--main">
       <div class="card__header">
         <h2 class="card__title">本日のテキスト</h2>
-        <span id="today-date" class="text-muted">m月d日（aaa）</span>
+        <span id="today-date" class="text-muted"></span>
       </div>
 
       <div class="card__body">
-        <h3 id="text-title" class="text-title">テキストタイトル</h3>
-        <p id="text-category" class="text-category">テキストカテゴリ</p>
-        <p id="text-body" class="text-body">テキスト本文</p>
+        <h3 id="text-title" class="text-title"></h3>
+        <p id="text-category" class="text-category"></p>
+        <p id="text-body" class="text-body"></p>
 
-        <p id="text-count" class="text-muted mt-8 text-right">文字数：xxx字</p>
+        <p id="text-count" class="text-muted mt-8 text-right"></p>
       </div>
     </section>
 
@@ -56,20 +57,20 @@
         <div id="timer-value" class="timer__value">00:00.00</div>
       </div>
       <div class="control-row">
-        <button id="resetBtn" class="btn btn--secondary control__btn btn--reset">
+        <button id="resetBtn" type="button" class="btn btn--secondary control__btn btn--reset">
           <span class="material-symbols-outlined">replay</span>
           <span class="btn__label">リセット</span>
         </button>
 
         <div class="control__center">
-          <button id="startPauseBtn" class="btn btn--primary btn--large control__start">
+          <button id="startPauseBtn" type="button" class="btn btn--primary btn--large control__start">
             <span class="material-symbols-outlined">play_arrow</span>
             <span class="btn__label">開始</span>
           </button>
           <p class="control__hint mt-0">タップで開始・停止を切替</p>
         </div>
 
-        <button id="stopBtn" class="btn btn--secondary control__btn btn--stop">
+        <button id="stopBtn" type="button" class="btn btn--secondary control__btn btn--stop">
           <span class="material-symbols-outlined">stop</span>
           <span class="btn__label">終了</span>
         </button>

@@ -5,6 +5,11 @@
   padding: 0.5rem;
 }
 
+.header__inner {
+  display: flex;
+  justify-content: space-between;
+}
+
 .container {
   max-width: 480px;
   margin: 0 auto 1rem;
@@ -32,6 +37,13 @@
   text-decoration: none;
 }
 
+a.btn,
+a.btn::before,
+a.btn::after {
+  box-sizing: border-box;
+}
+
+
 .btn--block {
   display: flex;
   width: 100%;
@@ -46,27 +58,37 @@
 }
 
 .btn--primary {
-  background: var(--color-primary-600);
-  color: var(--color-white);
+  background: var(--color-button-main);
+  color: var(--color-common-white);
 }
 
 .btn--secondary {
-  background: var(--color-white);
-  color: var(--color-primary-600);
-  border: 1px solid var(--color-primary-500);
+  background: var(--color-button-sub);
+  color: var(--color-common-white);
+}
+
+.btn--other {
+  background: var(--color-button-other);
+  color: var(--color-common-white);
 }
 
 .btn--danger {
-  background: var(--color-danger-600);
-  color: var(--color-white);
+  background: var(--color-common-white);
+  color: var(--color-button-danger);
 }
 
 .btn--calendar {
   padding: 0.5rem;
   font-size: var(--font-lg);
-  background: var(--color-white);
-  color: var(--color-primary-600);
-  border: 1px solid var(--color-primary-500);
+  background: var(--color-common-white);
+  color: var(--color-text-main);
+  border: 1px solid var(--color-common-gray-high);
+}
+
+.btn:disabled {
+  color: var(--color-common-gray-high);
+  opacity: 0.8;
+  cursor: not-allowed;
 }
 
 /* カード */
@@ -76,18 +98,13 @@
 }
 
 .card--main {
-  background: var(--color-white);
-  border: 1px solid var(--color-primary-100);
+  background: var(--color-bg-main);
+  border: 1px solid var(--color-text-main);
 }
 
 .card--sub {
-  background: var(--color-gray-50);
-  border: 1px solid var(--color-gray-300);
-}
-
-.card--accent {
-  background: var(--color-accent-50);
-  border: 1px solid var(--color-gray-300);
+  background: var(--color-bg-sub);
+  border: 1px solid var(--color-common-gray-low);
 }
 
 .card__header {
@@ -98,8 +115,21 @@
 }
 
 .card__title {
+  color: var(--color-text-sub);
   font-size: var(--font-md);
   font-weight: 700;
+}
+
+/* カテゴリ表示 */
+.text-category {
+  text-align: center;
+  color: var(--color-common-accent);
+}
+.text-category::before {
+  background: var(--color-common-accent);
+  border: 1px solid var(--color-common-accent);
+  color: var(--color-common-white);
+  content: "カテゴリ";
 }
 
 /* 計測結果 */
@@ -121,15 +151,15 @@
 
 /* ステータス表示 */
 .text-success {
-  color: var(--color-success-600);
+  color: var(--color-button-other);
 }
 
 .text-danger {
-  color: var(--color-danger-600);
+  color: var(--color-button-danger);
 }
 
 .text-muted {
-  color: var(--color-gray-500);
+  color: var(--color-common-gray-low);
 }
 
 /* テキスト本文 */
@@ -152,12 +182,12 @@
 }
 
 .text-accent {
-  color: var(--color-danger-700);
+  color: var(--color-common-accent);
   text-decoration: wavy underline;
 }
 
 .text-best {
-  color: var(--color-accent-500);
+  color: var(--color-common-accent);
 }
 
 /* リスト */
@@ -165,7 +195,7 @@
   list-style: none;
   padding: 0;
   margin: 0;
-  border: 1px solid var(--color-gray-300);
+  border: 1px solid var(--color-common-gray-high);
   border-radius: 8px;
   overflow: hidden;
 }
@@ -175,14 +205,14 @@
   flex-direction: column;
   gap: 4px;
   padding: 8px;
-  border-bottom: 1px solid var(--color-gray-300);
+  border-bottom: 1px solid var(--color-common-gray-high);
 }
 .list__item:last-child {
   border-bottom: none;
 }
 
 .list__item.is-best {
-  background: var(--color-accent-100);
+  background: var(--color-bg-best);
 }
 
 .record-main {
@@ -194,7 +224,7 @@
 
 .record-main > span {
   padding-right: 8px;
-  border-right: 1px solid var(--color-gray-300);
+  border-right: 1px solid var(--color-common-gray-high);
 }
 
 .record-main > span:last-child {
@@ -250,15 +280,20 @@
 
 /* リンク */
 .link {
-  color: var(--color-primary-600);
+  color: var(--color-text-sub);
   text-decoration: none;
   font-weight: 500;
 }
 
+/* 入力欄 */
 .one-line-input {
   padding: 12px;
-  border: 1px solid var(--color-gray-300);
+  border: 1px solid var(--color-button-other);
   border-radius: 8px;
   width: 100%;
   min-width: 0
+}
+.one-line-input:active,
+.one-line-input:focus {
+  outline: 2px solid var(--color-button-other);
 }

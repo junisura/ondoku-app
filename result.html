@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <script type="module" src="./js/auth.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex, nofollow">
@@ -16,7 +15,8 @@
   <link href="./css/components.css" rel="stylesheet">
   <link href="./css/layout.css" rel="stylesheet">
   <link href="./css/utilities.css" rel="stylesheet">
-  <script type="module" src="./js/result.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script type="module" src="./js/pages/result.js"></script>
   <title>まいにち！ラピ読 - 結果</title>
 </head>
 <body class="page page--result">
@@ -28,6 +28,7 @@
         <span class="material-symbols-outlined">home</span>
         <span class="btn__label">TOPへ</span>
       </a>
+      <img src="./img/rapidoku_logo_mini.png" height="40px" alt="">
     </div>
   </header>
 
@@ -40,15 +41,15 @@
       </div>
       <div class="card__body text-center">
         <div id="result__record" class="score l-inline-wrap flex-center-end">
-          <span id="last__time" class="result__time l-inline-nowrap">mi:ss.sss</span><wbr>
-          <span id="last__speed" class="result__speed l-inline-nowrap">（x.xx文字/秒）</span>
+          <span id="last__time" class="result__time l-inline-nowrap"></span><wbr>
+          <span id="last__speed" class="result__speed l-inline-nowrap"></span>
         </div>
       </div>
 
       <div id="memo-area" class="card__body mt-8 flex-area-center">
         <input type="text" id="memo__input" placeholder="一言メモ" maxlength="100" class="one-line-input">
         <p id="memo__output"></p>
-        <button id="saveMemoBtn" class="btn btn--secondary no-wrap">
+        <button id="saveMemoBtn" type="button" class="btn btn--other no-wrap">
           <span class="material-symbols-outlined">edit_square</span>
           <span class="btn__label">保存</span>
         </button>

@@ -27,7 +27,7 @@
 
 .no-wrap { white-space: nowrap; }
 
-.border-bottom { border-bottom: 1px solid var(--color-gray-300); }
+.border-bottom { border-bottom: 1px solid var(--color-common-gray-high); }
 
 .flex-area-center {
   display: flex;

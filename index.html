@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <script type="module" src="./js/auth.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex, nofollow">
@@ -16,7 +15,8 @@
   <link href="./css/components.css" rel="stylesheet">
   <link href="./css/layout.css" rel="stylesheet">
   <link href="./css/utilities.css" rel="stylesheet">
-  <script type="module" src="js/index.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script type="module" src="./js/pages/index.js"></script>
   <title>まいにち！ラピ読 - TOP</title>
 </head>
 <body class="page page--top">
@@ -25,21 +25,28 @@
 
     <!-- サイトタイトル -->
     <h1 class="mt-8">
-      <span id="logo">まいにち！ラピ読</span><!-- タイトルロゴにする 今のテキストはALTに置く-->
-      <p id="copy" class="font-medium">高速(rapid)音読で脳を活性化💪</p>
+      <span id="logo"><img src="./img/rapidoku_logo.png" width="100%" alt="まいにち！ラピ読　高速(rapid)音読で脳を活性化"></span>
     </h1>
 
     <!-- 本日のテキスト -->
     <section class="card card--main">
       <div class="card__header">
         <h2 class="card__title">本日のテキスト</h2>
-        <span id="today-date" class="text-muted">m月d日（aaa）</span>
+        <span id="today-date" class="text-muted"></span>
       </div>
 
       <div class="card__body">
-        <h3 id="text-title" class="text-title">テキストタイトル</h3>
-        <p id="text-category" class="text-category">テキストカテゴリ</p>
+        <h3 id="text-title" class="text-title"></h3>
+        <p id="text-category" class="text-category"></p>
       </div>
+
+      <div class="mt-16">
+        <button id="openBtn" type="button" class="btn btn--primary btn--block" disabled>
+          <span class="material-symbols-outlined">import_contacts</span>
+          <span class="btn__label">テキストを開く</span>
+        </button>
+      </div>
+
     </section>
 
     <!-- ベスト記録 -->
@@ -53,25 +60,18 @@
       </div>
     </section>
 
-    <!-- CTA -->
     <div class="mt-16">
-      <button id="openBtn" class="btn btn--primary btn--block">
-        <span class="material-symbols-outlined">import_contacts</span>
-        <span class="btn__label">テキストを開く</span>
-      </button>
-    </div>
-
-    <!-- サブ導線 -->
-    <div class="mt-8">
-      <a id="historyBtn" class="btn btn--secondary btn--block" href="history.html">
+      <a id="historyBtn" type="button" class="btn btn--secondary btn--block" href="./history.html">
         <span class="material-symbols-outlined">history_edu</span>
         <span class="btn__label">過去ログを見る</span>
       </a>
     </div>
 
-    <!-- 補助 -->
     <div class="mt-8 text-center">
-      <a href="howto.html" class="link">使い方・効果を見る</a>
+      <a id="historyBtn" type="button" class="btn btn--other btn--block" href="./howto.html">
+        <span class="material-symbols-outlined">help</span>
+        <span class="btn__label">使い方・高速音読について</span>
+      </a>
     </div>
 
   </main>

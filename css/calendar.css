@@ -5,10 +5,21 @@
   line-height: 2;
   margin: 0 auto;
   width: min(100%, 400px);
+  border: 1px solid var(--color-text-main);
+  background: var(--color-bg-calendar);
 }
 
 .calendar__week {
+  background: var(--color-text-main);
+  color: var(--color-common-white);
   text-align: center;
+  border-bottom: none;
+}
+.calendar__week > .sunday {
+  background: var(--color-button-danger);
+}
+.calendar__week > .saturday {
+  background: var(--color-button-main);
 }
 
 .day {
@@ -21,22 +32,23 @@
   position: relative;
 }
 .day.selected {
-  background-color: var(--color-primary-100);
+  background: rgba(245, 154, 42, 0.3);
+  border: none;
   border-radius: 50%;
 }
 .day.today {
-  color: var(--color-primary-500);
+  color: var(--color-common-accent);
   font-weight: 700;
 }
 .day.other-month {
-  color: var(--color-gray-300);
+  color: var(--color-common-gray-high);
 }
 .day.has-record::after {
   content: "";
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 4px;
+  bottom: 0;
   height: 3px;
-  background-color: var(--color-primary-500);
+  background-color: var(--color-common-accent);
 }
