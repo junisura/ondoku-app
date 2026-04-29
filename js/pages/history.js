@@ -13,8 +13,11 @@ async function init() {
   currentUserId = user.id;
   const todayStr = formatISOToYMD(new Date().toISOString());
 
-  await initCalendar(currentUserId, renderDetail);	// 第2引数は関数
-  await renderStreak();
+  await Promise.all([
+    renderStreak(),
+    initCalendar(currentUserId, renderDetail),
+    renderDetail(todayStr)
+  ]);
 }
 
 export async function renderStreak() {

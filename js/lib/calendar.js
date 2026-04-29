@@ -5,20 +5,20 @@ let today = new Date();
 let selectedDate = "";
 let onSelectDate = null;
 let currentUserId;
+let startDate;
+let endDate;
 const SERVICE_START_DATE = new Date("2026-04-01");
 
 export async function initCalendar(userId, callback) {
-  selectedDate = formatISOToYMD(new Date().toISOString()); // 初期値は当日
   currentUserId = userId;
   onSelectDate = callback;
+  selectedDate = formatISOToYMD(new Date().toISOString()); // 初期値は当日
 
-  await renderCalendar();
-
-  // 初期表示時も当日詳細を出す
-  await onSelectDate(selectedDate);
+  renderCalendarSkeleton();
+  await decorateCalendarRecords();
 }
 
-async function renderCalendar() {
+async function renderCalendarSkeleton() {
   const year = today.getFullYear();
   const month = today.getMonth();
 
@@ -34,9 +34,8 @@ async function renderCalendar() {
   const totalCells = Math.ceil((firstDay + daysInMonth) / 7) * 7;
   const todayStr = formatISOToYMD(new Date().toISOString());
 
-  const startDate = new Date(year, month, 1 - firstDay);
-  const endDate = new Date(year, month, daysInMonth + (totalCells - firstDay - daysInMonth));
-  const recordedDates = await getRecordsByPeriod(currentUserId, formatISOToYMD(startDate), formatISOToYMD(endDate));
+  startDate = new Date(year, month, 1 - firstDay);
+  endDate = new Date(year, month, daysInMonth + (totalCells - firstDay - daysInMonth));
 
   for (let i = 0; i < totalCells; i++) {
     let day, cellMonth, isOtherMonth;
@@ -59,12 +58,10 @@ async function renderCalendar() {
     const dateStr = formatISOToYMD(date);
     const isToday = dateStr === todayStr;
     const isSelected = dateStr === selectedDate;
-    const hasRecord = recordedDates.has(dateStr);
     const div = document.createElement("div");
 
     div.classList.add("day");
     if (isOtherMonth) div.classList.add("other-month");
-    if (hasRecord) div.classList.add("has-record");
     if (isToday) div.classList.add("today");
     if (isSelected) div.classList.add("selected");
 
@@ -77,6 +74,18 @@ async function renderCalendar() {
   }
 
   activateNaviButtons();
+}
+
+async function decorateCalendarRecords() {
+  const recordedDates = await getRecordsByPeriod(currentUserId, formatISOToYMD(startDate), formatISOToYMD(endDate));
+
+  document.querySelectorAll(".day").forEach(el => {
+    const dateStr = el.dataset.date;
+
+    if (recordedDates.has(dateStr)) {
+      el.classList.add("has-record");
+    }
+  });
 }
 
 function handleDateClick(dateStr, el) {
@@ -98,24 +107,28 @@ function handleDateClick(dateStr, el) {
   onSelectDate(dateStr);
 }
 
-function prevYear() {
+async function prevYear() {
   today.setFullYear(today.getFullYear() - 1);
-  renderCalendar();
+  renderCalendarSkeleton();
+  await decorateCalendarRecords();
 }
 
-function prevMonth() {
+async function prevMonth() {
   today.setMonth(today.getMonth() - 1);
-  renderCalendar();
+  renderCalendarSkeleton();
+  await decorateCalendarRecords();
 }
 
-function nextMonth() {
+async function nextMonth() {
   today.setMonth(today.getMonth() + 1);
-  renderCalendar();
+  renderCalendarSkeleton();
+  await decorateCalendarRecords();
 }
 
-function nextYear() {
+async function nextYear() {
   today.setFullYear(today.getFullYear() + 1);
-  renderCalendar();
+  renderCalendarSkeleton();
+  await decorateCalendarRecords();
 }
 
 function activateNaviButtons() {

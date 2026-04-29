@@ -7,7 +7,6 @@ import { renderRecordList } from "../lib/recordList.js";
 // データ読み込み
 let lastRecId;
 let today;
-let todayRecords;
 let memoInput = null;
 let memoOutput = null;
 
@@ -15,17 +14,14 @@ let memoOutput = null;
 async function init() {
   const { user, error } = await getCurrentUser();
 
-  const params = new URLSearchParams(location.search);
-  lastRecId = params.get("rec_id");
-  if (!lastRecId) {
+  const lastRec = JSON.parse(sessionStorage.getItem("lastRecord"));
+  if (!lastRec) {
     alert("計測記録がありません。TOPに戻ります");
     location.href = "index.html";
     return;
   }
-
-  const lastRec = await findRecordById(user.id, lastRecId);
+  lastRecId = lastRec.id;
   today = lastRec.work_date;
-  todayRecords = await getRecordsByDate(user.id, today);
 
   const isValid = await validateContentForDate(lastRec.content_id, today);
   if (!isValid) {
@@ -44,20 +40,22 @@ async function init() {
     setMemoEditMode(true);
   }
 
-  // 前回比較
-  const prev = await getPrevRecord(user.id, lastRec);
-  if (prev) {
-    document.getElementById("diff-card").classList.remove("display-none");
-    document.getElementById("prev__time").textContent = formatMsToTime(prev.time_sec);
-    document.getElementById("prev__speed").textContent = `（${prev.speed.toFixed(2)}文字/秒）`;
+  // 前回比較：当日初回は表示しない
+  if (lastRec.attempt_index > 1) {
+    const prev = await getPrevRecord(user.id, lastRec);
+    if (prev) {
+      document.getElementById("diff-card").classList.remove("display-none");
+      document.getElementById("prev__time").textContent = formatMsToTime(prev.time_sec);
+      document.getElementById("prev__speed").textContent = `（${prev.speed.toFixed(2)}文字/秒）`;
 
-    const diff = lastRec.time_sec - prev.time_sec;
-    const diffTime = document.getElementById("diff__time");
-    const diffDisplay = formatDiffText(diff);
+      const diff = lastRec.time_sec - prev.time_sec;
+      const diffTime = document.getElementById("diff__time");
+      const diffDisplay = formatDiffText(diff);
 
-    diffTime.textContent = diffDisplay.text;
-    if (diffDisplay.className) {
-      diffTime.classList.add(diffDisplay.className);
+      diffTime.textContent = diffDisplay.text;
+      if (diffDisplay.className) {
+        diffTime.classList.add(diffDisplay.className);
+      }
     }
   }
 
@@ -68,6 +66,7 @@ async function init() {
   }
 
   // 結果一覧を描画
+  const todayRecords = await getRecordsByDate(user.id, today);
   renderRecordList(todayRecords);
 }
 
@@ -99,13 +98,14 @@ async function saveMemo() {
   const { user, error } = await getCurrentUser();
   const lastRec = await findRecordById(user.id, lastRecId);
   lastRec.memo = memoInput.value;
-  await updateRecordMemo(user.id, lastRecId, memoInput.value);
+  await updateRecordMemo(user.id, lastRecId, memoInput.value.replace(/</g, "&lt;").replace(/>/g, "&gt;"));
 
   memoOutput.textContent = `メモ：　${memoInput.value}`;
   setMemoEditMode(true);
   alert("保存しました！");
 
   // 結果一覧を描画
+  const todayRecords = await getRecordsByDate(user.id, today);
   renderRecordList(todayRecords);
 };
 

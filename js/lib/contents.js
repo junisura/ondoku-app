@@ -1,5 +1,7 @@
 import { selectContentIdByDate, selectContentById, selectDailyContent } from "./repository.js";
 
+const CACHE_KEY = "daily_content_cache";
+
 export async function getContentIdByDate(workDate) {
   const { data, error } = await selectContentIdByDate(workDate);
 
@@ -28,4 +30,25 @@ export async function validateContentForDate(contentId, workDate) {
   }
   
   return true;
+}
+
+export async function getCachedTodayContent(todayStr) {
+  const cached = sessionStorage.getItem(CACHE_KEY);
+
+  if (cached) {
+    const parsed = JSON.parse(cached);
+    if (parsed.work_date === todayStr) {
+      return parsed
+    }
+  }
+
+  const data = await getContentByDate(todayStr);
+  if (data) {
+    sessionStorage.setItem(
+      CACHE_KEY,
+      JSON.stringify(data)
+    );
+  }
+
+  return data;
 }

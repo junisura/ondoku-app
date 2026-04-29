@@ -5,6 +5,11 @@
   padding: 0.5rem;
 }
 
+.header__inner {
+  display: flex;
+  justify-content: space-between;
+}
+
 .container {
   max-width: 480px;
   margin: 0 auto 1rem;
@@ -31,6 +36,13 @@
   gap: 4px;
   text-decoration: none;
 }
+
+a.btn,
+a.btn::before,
+a.btn::after {
+  box-sizing: border-box;
+}
+
 
 .btn--block {
   display: flex;
@@ -73,7 +85,7 @@
   border: 1px solid var(--color-common-gray-high);
 }
 
-.btn--calendar:disabled {
+.btn:disabled {
   color: var(--color-common-gray-high);
   opacity: 0.8;
   cursor: not-allowed;

@@ -35,12 +35,6 @@
   --font-xxl: 2.5rem;  /* タイマー */
 }
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
 body {
   margin: 0;
   font-family: "Noto Sans JP", "Inter", sans-serif;

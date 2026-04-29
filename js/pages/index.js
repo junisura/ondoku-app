@@ -1,6 +1,6 @@
 import { login, getCurrentUser } from "../lib/auth.js";
 import { formatISOToYMD, formatYMDToJPMDA, formatYMDToJP } from "../lib/date.js";
-import { getContentByDate } from "../lib/contents.js";
+import { getCachedTodayContent } from "../lib/contents.js";
 import { getBestRecord } from "../lib/records.js";
 
 let today = "";
@@ -12,10 +12,11 @@ async function init() {
   today = formatISOToYMD(new Date().toISOString());
   document.getElementById("today-date").textContent = formatYMDToJPMDA(today);
 
-  const currentContent = await getContentByDate(today);
+  const currentContent = await getCachedTodayContent(today);
   if (currentContent) {
     document.getElementById("text-title").textContent = currentContent.contents.title;
     document.getElementById("text-category").textContent = currentContent.contents.category;
+    document.getElementById("openBtn").disabled = false;
   } else {
     document.getElementById("text-title").textContent = "（教材取得失敗）";
     document.getElementById("text-category").textContent = "";

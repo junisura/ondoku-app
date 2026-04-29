@@ -1,6 +1,6 @@
 import { getCurrentUser } from "../lib/auth.js";
 import { formatISOToYMD, isSameDay, formatYMDToJPMDA, formatMsToTime } from "../lib/date.js";
-import { getContentByDate } from "../lib/contents.js";
+import { getCachedTodayContent } from "../lib/contents.js";
 import { getRecordsByDate, createRecord } from "../lib/records.js";
 import { Timer } from "../lib/timer.js";
 
@@ -17,7 +17,7 @@ async function init() {
   isSameDay(today);
 
   document.getElementById("today-date").textContent = formatYMDToJPMDA(today);
-  currentContent = await getContentByDate(today);
+  currentContent = await getCachedTodayContent(today);
   if (currentContent) {
     document.getElementById("text-title").textContent = currentContent.contents.title;
     document.getElementById("text-category").textContent = currentContent.contents.category;
@@ -64,13 +64,18 @@ function toggleTimer() {
 
 async function stopTimer() {
   if (!Timer.startTime && Timer.elapsedBeforePause === 0) return;
+
+  // まず止める
+  const time_sec = Timer.stop();
+  const stopBtn = document.getElementById("stopBtn");
+  stopBtn.disabled = true;
+  stopBtn.textContent = "保存中...";
+
   const { user, error } = await getCurrentUser();
   if (!user) {
     alert("ログインが必要です");
     return;
   }
-
-  const time_sec = Timer.stop();
 
   // ゼロ除算回避
   if (time_sec <= 0) return;
@@ -89,7 +94,8 @@ async function stopTimer() {
 
   try {
     const rec = await createRecord(record);
-    location.href = `result.html?rec_id=${rec.id}`;
+    sessionStorage.setItem("lastRecord", JSON.stringify(rec));
+    location.href = "result.html";
   } catch (error) {
     console.error(error);
     alert("記録に失敗しました。恐れ入りますが計測をやり直してください。");
