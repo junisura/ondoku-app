@@ -6,7 +6,7 @@ import { getBestRecord } from "../lib/records.js";
 let today = "";
 
 async function init() {
-  await login("junisura@yahoo.co.jp", "ondock2026");
+  await login("gyosupya588@fukurou.ch", "ondock2026");
   const { user, error } = await getCurrentUser();
 
   today = formatISOToYMD(new Date().toISOString());
