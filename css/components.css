@@ -25,16 +25,17 @@
 
 /* ボタン */
 .btn {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 8px;
+  border-radius: 16px;
   padding: 8px 12px;
   font-weight: 700;
   cursor: pointer;
-  border: none;
   gap: 4px;
   text-decoration: none;
+  border: 2px solid rgba(0,0,0,0.2);
 }
 
 .btn:active {
@@ -47,6 +48,13 @@ a.btn::after {
   box-sizing: border-box;
 }
 
+.btn::before {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  border-radius: inherit;
+  pointer-events: none;
+}
 
 .btn--block {
   display: flex;
@@ -62,21 +70,33 @@ a.btn::after {
 }
 
 .btn--primary {
-  background: var(--color-button-main);
   color: var(--color-common-white);
-  box-shadow: 0 4px #1F5A8C, inset 0 3px #5A9BD3;
+  background: linear-gradient(
+    to bottom,
+    #5194CD,
+    #2D78B7
+  );
+  box-shadow: 0 4px #1F5A8C, inset 0 4px #5A9BD3;
 }
 
 .btn--secondary {
-  background: var(--color-button-sub);
   color: var(--color-common-white);
-  box-shadow: 0 4px #3C8FBD, inset 0 3px #8FD0F0;
+  background: linear-gradient(
+    to bottom,
+    #80C8EE,
+    #5CB7E8
+  );
+  box-shadow: 0 3px #3C8FBD, inset 0 3px #8FD0F0;
 }
 
 .btn--other {
-  background: var(--color-button-other);
   color: var(--color-common-white);
-  box-shadow: 0 4px #5F943C, inset 0 3px #9DCD6F;
+  background: linear-gradient(
+    to bottom,
+    #93C765,
+    #79B84D
+  );
+  box-shadow: 0 3px #5F943C, inset 0 3px #9DCD6F;
 }
 
 .btn--calendar {
