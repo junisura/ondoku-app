@@ -37,6 +37,10 @@
   text-decoration: none;
 }
 
+.btn:active {
+  transform: translateY(2px);
+}
+
 a.btn,
 a.btn::before,
 a.btn::after {
@@ -60,21 +64,19 @@ a.btn::after {
 .btn--primary {
   background: var(--color-button-main);
   color: var(--color-common-white);
+  box-shadow: 0 4px #1F5A8C, inset 0 3px #5A9BD3;
 }
 
 .btn--secondary {
   background: var(--color-button-sub);
   color: var(--color-common-white);
+  box-shadow: 0 4px #3C8FBD, inset 0 3px #8FD0F0;
 }
 
 .btn--other {
   background: var(--color-button-other);
   color: var(--color-common-white);
-}
-
-.btn--danger {
-  background: var(--color-common-white);
-  color: var(--color-button-danger);
+  box-shadow: 0 4px #5F943C, inset 0 3px #9DCD6F;
 }
 
 .btn--calendar {
@@ -121,15 +123,29 @@ a.btn::after {
 }
 
 /* カテゴリ表示 */
-.text-category {
-  text-align: center;
-  color: var(--color-common-accent);
-}
-.text-category::before {
-  background: var(--color-common-accent);
+.category-frame {
+  display: inline-flex;
   border: 1px solid var(--color-common-accent);
+  border-radius: 8px;
+  width: fit-content;
+  align-items: center;
+  white-space: nowrap;
+  overflow: hidden;
+  gap: 0;
+  margin: 0.5rem auto;
+}
+
+.category-label {
+  background: var(--color-common-accent);
   color: var(--color-common-white);
-  content: "カテゴリ";
+  font-size: var(--font-sm);
+  padding: 0.3rem 0.6rem;
+}
+
+.text-category {
+  color: var(--color-common-accent);
+  font-size: var(--font-sm);
+  padding: 0.3rem 0.6rem;
 }
 
 /* 計測結果 */

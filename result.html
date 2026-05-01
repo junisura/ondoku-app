@@ -46,13 +46,16 @@
         </div>
       </div>
 
-      <div id="memo-area" class="card__body mt-8 flex-area-center">
-        <input type="text" id="memo__input" placeholder="一言メモ" maxlength="100" class="one-line-input">
-        <p id="memo__output"></p>
-        <button id="saveMemoBtn" type="button" class="btn btn--other no-wrap">
-          <span class="material-symbols-outlined">edit_square</span>
-          <span class="btn__label">保存</span>
-        </button>
+      <div id="memo-area" class="card__body mt-8">
+        <div class="flex-area-center">
+          <input type="text" id="memo__input" placeholder="一言メモ" maxlength="100" class="one-line-input">
+          <button id="saveMemoBtn" type="button" class="btn btn--other no-wrap">
+            <span class="material-symbols-outlined">edit_square</span>
+            <span class="btn__label">保存</span>
+          </button>
+        </div>
+        <p id="memo__output" class="display-none"></p>
+        <p id="memo__error" class="text-danger display-none mt-8 mb-0"></p>
       </div>
     </section>
 
