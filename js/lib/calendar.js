@@ -148,15 +148,17 @@ function activateNaviButtons() {
   const nowMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 
   // 判定
-  const canGoPrev = currentMonth > serviceMonth;
-  const canGoNext = currentMonth < nowMonth;
+  const canGoPrevYear = today.getFullYear() > SERVICE_START_DATE.getFullYear();
+  const canGoPrevMon = currentMonth > serviceMonth;
+  const canGoNextMon = currentMonth < nowMonth;
+  const canGoNextYear = today.getFullYear() < now.getFullYear();
 
   // 状態反映
-  prevYearBtn.disabled = !canGoPrev;
-  prevMonthBtn.disabled = !canGoPrev;
+  prevYearBtn.disabled = !canGoPrevYear;
+  prevMonthBtn.disabled = !canGoPrevMon;
 
-  nextMonthBtn.disabled = !canGoNext;
-  nextYearBtn.disabled = !canGoNext;
+  nextMonthBtn.disabled = !canGoNextMon;
+  nextYearBtn.disabled = !canGoNextYear;
 }
 
 // メイン処理

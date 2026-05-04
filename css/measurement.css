@@ -41,17 +41,14 @@
 }
 
 .btn--reset {
-  margin-left: 0.3rem;
+  margin-left: 0.1rem;
 }
 .btn--reset .btn__label {
   font-size: var(--font-xxs);
 }
 
 .btn--stop {
-  color: var(--color-common-white);
-  background: var(--color-button-danger);
-  border: 1px solid var(--color-button-danger);
-  margin-right: 0.3rem;
+  margin-right: 0.1rem;
 }
 
 /* タイマー */

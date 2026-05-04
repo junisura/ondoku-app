@@ -28,7 +28,7 @@
         <span class="material-symbols-outlined">home</span>
         <span class="btn__label">TOPへ</span>
       </a>
-      <img src="./img/rapidoku_logo_mini.png" height="40px" alt="">
+      <img src="./img/rapidoku_logo_mini.png" class="mini-banner" alt="">
     </div>
   </header>
 
@@ -46,13 +46,16 @@
         </div>
       </div>
 
-      <div id="memo-area" class="card__body mt-8 flex-area-center">
-        <input type="text" id="memo__input" placeholder="一言メモ" maxlength="100" class="one-line-input">
-        <p id="memo__output"></p>
-        <button id="saveMemoBtn" type="button" class="btn btn--other no-wrap">
-          <span class="material-symbols-outlined">edit_square</span>
-          <span class="btn__label">保存</span>
-        </button>
+      <div id="memo-area" class="card__body mt-8">
+        <div class="flex-area-center">
+          <input type="text" id="memo__input" placeholder="一言メモ" maxlength="100" class="one-line-input">
+          <button id="saveMemoBtn" type="button" class="btn btn--other no-wrap">
+            <span class="material-symbols-outlined">edit_square</span>
+            <span class="btn__label">保存</span>
+          </button>
+        </div>
+        <p id="memo__output" class="display-none"></p>
+        <p id="memo__error" class="text-danger display-none mt-8 mb-0"></p>
       </div>
     </section>
 
@@ -68,8 +71,9 @@
           <span id="prev__time" class="font-large score">mi:ss.sss</span>
           <span id="prev__speed">（x.xx文字/秒）</span>
         </div>
-        <div class="result__diff text-center">
-          <span id="diff__time" class="score">S mi:ss.sss xxxx</span>
+        <div class="result__diff text-center mt-4">
+          <span id="diff__time" class="score"></span>
+          <span id="diff__badge"></span>
         </div>
       </div>
     </section>
@@ -82,6 +86,7 @@
 
       <ul id="records" class="list">
       </ul>
+      <p><a class="link font-small" href="./history.html">▶前日までの記録を見る</a></p>
     </section>
 
     <!-- アクション -->

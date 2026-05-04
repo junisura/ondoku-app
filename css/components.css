@@ -23,18 +23,27 @@
   gap: 4px;
 }
 
+.mini-banner {
+  height: 40px;
+}
+
 /* ボタン */
 .btn {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 8px;
+  border-radius: 16px;
   padding: 8px 12px;
   font-weight: 700;
   cursor: pointer;
-  border: none;
   gap: 4px;
   text-decoration: none;
+  border: 2px solid rgba(0,0,0,0.2);
+}
+
+.btn:active {
+  transform: translateY(2px);
 }
 
 a.btn,
@@ -43,6 +52,13 @@ a.btn::after {
   box-sizing: border-box;
 }
 
+.btn::before {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  border-radius: inherit;
+  pointer-events: none;
+}
 
 .btn--block {
   display: flex;
@@ -58,31 +74,39 @@ a.btn::after {
 }
 
 .btn--primary {
-  background: var(--color-button-main);
   color: var(--color-common-white);
+  background: linear-gradient(
+    #2D78B7,
+    #5194CD
+  );
+  box-shadow: 0 4px #1F5A8C, inset 0 4px #5A9BD3;
 }
 
 .btn--secondary {
-  background: var(--color-button-sub);
   color: var(--color-common-white);
+  background: linear-gradient(
+    #5CB7E8,
+    #80C8EE
+  );
+  box-shadow: 0 3px #3C8FBD, inset 0 3px #8FD0F0;
 }
 
 .btn--other {
-  background: var(--color-button-other);
   color: var(--color-common-white);
+  background: linear-gradient(
+    #79B84D,
+    #93C765
+  );
+  box-shadow: 0 3px #5F943C, inset 0 3px #9DCD6F;
 }
 
 .btn--danger {
-  background: var(--color-common-white);
-  color: var(--color-button-danger);
-}
-
-.btn--calendar {
-  padding: 0.5rem;
-  font-size: var(--font-lg);
-  background: var(--color-common-white);
-  color: var(--color-text-main);
-  border: 1px solid var(--color-common-gray-high);
+  color: var(--color-common-white);
+  background: linear-gradient(
+    #E85B47,
+    #ED7C6B
+  );
+  box-shadow: 0 3px #B94435, inset 0 3px #F08A7B;
 }
 
 .btn:disabled {
@@ -91,10 +115,18 @@ a.btn::after {
   cursor: not-allowed;
 }
 
+.btn--danger:disabled {
+  color: var(--color-common-white);
+}
+
 /* カード */
 .card {
   border-radius: 12px;
   padding: 16px;
+}
+
+.card-has-image {
+  position: relative;
 }
 
 .card--main {
@@ -120,16 +152,39 @@ a.btn::after {
   font-weight: 700;
 }
 
-/* カテゴリ表示 */
-.text-category {
-  text-align: center;
-  color: var(--color-common-accent);
+/* イラスト */
+.best-card__icon {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 50px;
+  height: auto;
 }
-.text-category::before {
-  background: var(--color-common-accent);
+
+/* カテゴリ表示 */
+.category-frame {
+  display: inline-flex;
   border: 1px solid var(--color-common-accent);
+  border-radius: 8px;
+  width: fit-content;
+  align-items: center;
+  white-space: nowrap;
+  overflow: hidden;
+  gap: 0;
+  margin: 0.5rem auto;
+}
+
+.category-label {
+  background: var(--color-common-accent);
   color: var(--color-common-white);
-  content: "カテゴリ";
+  font-size: var(--font-sm);
+  padding: 0.3rem 0.6rem;
+}
+
+.text-category {
+  color: var(--color-common-accent);
+  font-size: var(--font-sm);
+  padding: 0.3rem 0.6rem;
 }
 
 /* 計測結果 */
@@ -204,7 +259,7 @@ a.btn::after {
   display: flex;
   flex-direction: column;
   gap: 4px;
-  padding: 8px;
+  padding: 0.4rem;
   border-bottom: 1px solid var(--color-common-gray-high);
 }
 .list__item:last-child {
@@ -219,7 +274,7 @@ a.btn::after {
   display: grid;
   grid-template-columns: auto 1fr 2fr 2fr;
   align-items: center;
-  gap: 8px;
+  gap: 0.5rem;
 }
 
 .record-main > span {
@@ -296,4 +351,28 @@ a.btn::after {
 .one-line-input:active,
 .one-line-input:focus {
   outline: 2px solid var(--color-button-other);
+}
+
+.badge-success {
+  display: inline-block;
+  background-color: var(--color-button-other);
+  color: var(--color-common-white);
+  font-size: var(--font-xs);
+  padding: 0.5rem;
+  margin-left: 0.5rem;
+  border-radius: 1rem;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.badge-danger {
+  display: inline-block;
+  background-color: var(--color-button-danger);
+  color: var(--color-common-white);
+  font-size: var(--font-xs);
+  padding: 0.5rem;
+  margin-left: 0.5rem;
+  border-radius: 1rem;
+  text-align: center;
+  white-space: nowrap;
 }

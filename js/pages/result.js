@@ -50,11 +50,14 @@ async function init() {
 
       const diff = lastRec.time_sec - prev.time_sec;
       const diffTime = document.getElementById("diff__time");
-      const diffDisplay = formatDiffText(diff);
+      const diffBadge = document.getElementById("diff__badge");
+      const diffDeco = getDiffDeco(diff);
 
-      diffTime.textContent = diffDisplay.text;
-      if (diffDisplay.className) {
-        diffTime.classList.add(diffDisplay.className);
+      if (diffDeco.textClass) {
+        diffTime.classList.add(diffDeco.textClass);
+        diffBadge.classList.add(diffDeco.badgeClass);
+        diffTime.textContent = diffDeco.diffText;
+        diffBadge.textContent = diffDeco.badgeText;
       }
     }
   }
@@ -70,35 +73,48 @@ async function init() {
   renderRecordList(todayRecords);
 }
 
-function formatDiffText(diff) {
+function getDiffDeco(diff) {
   if (diff > 0) {
     return {
-      text: `${formatMsToTime(diff)} 速度DOWN...`,
-      className: "text-danger",
+      diffText: `+${formatMsToTime(diff)}`,
+      badgeText: "速度DOWN...",
+      textClass: "text-danger",
+      badgeClass: "badge-danger"
     };
   }
 
   if (diff < 0) {
     return {
-      text: `${formatMsToTime(diff)} 速度UP!`,
-      className: "text-success",
+      diffText: `-${formatMsToTime(diff)}`,
+      badgeText: "速度UP!",
+      textClass: "text-success",
+      badgeClass: "badge-success"
     };
   }
 
   return {
-    text: formatMsToTime(diff),
-    className: "",
+    diffText: `${formatMsToTime(diff)}`,
+    badgeText: "",
+    textClass: "",
+    badgeClass: ""
   };
 }
 
 // ボタン
 async function saveMemo() {
   if (!memoInput.value) return;
-
   const { user, error } = await getCurrentUser();
   const lastRec = await findRecordById(user.id, lastRecId);
-  lastRec.memo = memoInput.value;
-  await updateRecordMemo(user.id, lastRecId, memoInput.value.replace(/</g, "&lt;").replace(/>/g, "&gt;"));
+
+  lastRec.memo = memoInput.value.trim();
+
+  if (lastRec.memo.length > 100) {
+    const errorEl = document.getElementById("memo__error");
+    errorEl.textContent = "100文字以内で入力してください";
+    errorEl.classList.remove("display-none");
+    return;
+  }
+  await updateRecordMemo(user.id, lastRecId, memoInput.value.trim());
 
   memoOutput.textContent = `メモ：　${memoInput.value}`;
   setMemoEditMode(true);
@@ -120,6 +136,7 @@ function setMemoEditMode(isOutput) {
     document.getElementById("saveMemoBtn").classList.add("display-none");
     memoInput.classList.add("display-none");
     memoOutput.classList.remove("display-none");
+    document.getElementById("memo__error").classList.add("display-none");
   } else {
     document.getElementById("saveMemoBtn").classList.remove("display-none");
     memoInput.classList.remove("display-none");

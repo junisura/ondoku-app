@@ -29,7 +29,7 @@
         <span class="material-symbols-outlined">home</span>
         <span class="btn__label">TOPへ</span>
       </a>
-      <img src="./img/rapidoku_logo_mini.png" height="40px" alt="">
+      <img src="./img/rapidoku_logo_mini.png" class="mini-banner" alt="">
     </div>
   </header>
 
@@ -44,9 +44,10 @@
 
       <div class="card__body">
         <h3 id="text-title" class="text-title"></h3>
-        <p id="text-category" class="text-category"></p>
+        <div class="flex-area-center"><p class="category-frame">
+          <span class="category-label">カテゴリ</span><span id="text-category" class="text-category"></span>
+        </p></div>
         <p id="text-body" class="text-body"></p>
-
         <p id="text-count" class="text-muted mt-8 text-right"></p>
       </div>
     </section>
@@ -67,10 +68,10 @@
             <span class="material-symbols-outlined">play_arrow</span>
             <span class="btn__label">開始</span>
           </button>
-          <p class="control__hint mt-0">タップで開始・停止を切替</p>
+          <p class="control__hint mt-8">タップで開始・停止を切替</p>
         </div>
 
-        <button id="stopBtn" type="button" class="btn btn--secondary control__btn btn--stop">
+        <button id="stopBtn" type="button" class="btn btn--danger control__btn btn--stop">
           <span class="material-symbols-outlined">stop</span>
           <span class="btn__label">終了</span>
         </button>

@@ -22,6 +22,15 @@
   background: var(--color-button-main);
 }
 
+.btn--calendar {
+  padding: 0.5rem;
+  font-size: var(--font-lg);
+  background: var(--color-common-white);
+  color: var(--color-text-main);
+  border: 1px solid var(--color-common-gray-high);
+  border-radius: 8px;
+}
+
 .day {
   aspect-ratio: 1;
   display: flex;
