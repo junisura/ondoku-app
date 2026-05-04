@@ -23,6 +23,10 @@
   gap: 4px;
 }
 
+.mini-banner {
+  height: 40px;
+}
+
 /* ボタン */
 .btn {
   position: relative;
@@ -72,9 +76,8 @@ a.btn::after {
 .btn--primary {
   color: var(--color-common-white);
   background: linear-gradient(
-    to bottom,
-    #5194CD,
-    #2D78B7
+    #2D78B7,
+    #5194CD
   );
   box-shadow: 0 4px #1F5A8C, inset 0 4px #5A9BD3;
 }
@@ -82,9 +85,8 @@ a.btn::after {
 .btn--secondary {
   color: var(--color-common-white);
   background: linear-gradient(
-    to bottom,
-    #80C8EE,
-    #5CB7E8
+    #5CB7E8,
+    #80C8EE
   );
   box-shadow: 0 3px #3C8FBD, inset 0 3px #8FD0F0;
 }
@@ -92,19 +94,19 @@ a.btn::after {
 .btn--other {
   color: var(--color-common-white);
   background: linear-gradient(
-    to bottom,
-    #93C765,
-    #79B84D
+    #79B84D,
+    #93C765
   );
   box-shadow: 0 3px #5F943C, inset 0 3px #9DCD6F;
 }
 
-.btn--calendar {
-  padding: 0.5rem;
-  font-size: var(--font-lg);
-  background: var(--color-common-white);
-  color: var(--color-text-main);
-  border: 1px solid var(--color-common-gray-high);
+.btn--danger {
+  color: var(--color-common-white);
+  background: linear-gradient(
+    #E85B47,
+    #ED7C6B
+  );
+  box-shadow: 0 3px #B94435, inset 0 3px #F08A7B;
 }
 
 .btn:disabled {
@@ -113,10 +115,18 @@ a.btn::after {
   cursor: not-allowed;
 }
 
+.btn--danger:disabled {
+  color: var(--color-common-white);
+}
+
 /* カード */
 .card {
   border-radius: 12px;
   padding: 16px;
+}
+
+.card-has-image {
+  position: relative;
 }
 
 .card--main {
@@ -140,6 +150,15 @@ a.btn::after {
   color: var(--color-text-sub);
   font-size: var(--font-md);
   font-weight: 700;
+}
+
+/* イラスト */
+.best-card__icon {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 50px;
+  height: auto;
 }
 
 /* カテゴリ表示 */
@@ -240,7 +259,7 @@ a.btn::after {
   display: flex;
   flex-direction: column;
   gap: 4px;
-  padding: 8px;
+  padding: 0.4rem;
   border-bottom: 1px solid var(--color-common-gray-high);
 }
 .list__item:last-child {
@@ -255,7 +274,7 @@ a.btn::after {
   display: grid;
   grid-template-columns: auto 1fr 2fr 2fr;
   align-items: center;
-  gap: 8px;
+  gap: 0.5rem;
 }
 
 .record-main > span {
@@ -332,4 +351,28 @@ a.btn::after {
 .one-line-input:active,
 .one-line-input:focus {
   outline: 2px solid var(--color-button-other);
+}
+
+.badge-success {
+  display: inline-block;
+  background-color: var(--color-button-other);
+  color: var(--color-common-white);
+  font-size: var(--font-xs);
+  padding: 0.5rem;
+  margin-left: 0.5rem;
+  border-radius: 1rem;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.badge-danger {
+  display: inline-block;
+  background-color: var(--color-button-danger);
+  color: var(--color-common-white);
+  font-size: var(--font-xs);
+  padding: 0.5rem;
+  margin-left: 0.5rem;
+  border-radius: 1rem;
+  text-align: center;
+  white-space: nowrap;
 }

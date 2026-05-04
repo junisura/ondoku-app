@@ -50,11 +50,14 @@ async function init() {
 
       const diff = lastRec.time_sec - prev.time_sec;
       const diffTime = document.getElementById("diff__time");
-      const diffDisplay = formatDiffText(diff);
+      const diffBadge = document.getElementById("diff__badge");
+      const diffDeco = getDiffDeco(diff);
 
-      diffTime.textContent = diffDisplay.text;
-      if (diffDisplay.className) {
-        diffTime.classList.add(diffDisplay.className);
+      if (diffDeco.textClass) {
+        diffTime.classList.add(diffDeco.textClass);
+        diffBadge.classList.add(diffDeco.badgeClass);
+        diffTime.textContent = diffDeco.diffText;
+        diffBadge.textContent = diffDeco.badgeText;
       }
     }
   }
@@ -70,24 +73,30 @@ async function init() {
   renderRecordList(todayRecords);
 }
 
-function formatDiffText(diff) {
+function getDiffDeco(diff) {
   if (diff > 0) {
     return {
-      text: `${formatMsToTime(diff)} 速度DOWN...`,
-      className: "text-danger",
+      diffText: `+${formatMsToTime(diff)}`,
+      badgeText: "速度DOWN...",
+      textClass: "text-danger",
+      badgeClass: "badge-danger"
     };
   }
 
   if (diff < 0) {
     return {
-      text: `${formatMsToTime(diff)} 速度UP!`,
-      className: "text-success",
+      diffText: `-${formatMsToTime(diff)}`,
+      badgeText: "速度UP!",
+      textClass: "text-success",
+      badgeClass: "badge-success"
     };
   }
 
   return {
-    text: formatMsToTime(diff),
-    className: "",
+    diffText: `${formatMsToTime(diff)}`,
+    badgeText: "",
+    textClass: "",
+    badgeClass: ""
   };
 }
 

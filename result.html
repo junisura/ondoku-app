@@ -8,8 +8,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@500;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
   <link href="./css/base.css" rel="stylesheet">
   <link href="./css/components.css" rel="stylesheet">
@@ -28,7 +28,7 @@
         <span class="material-symbols-outlined">home</span>
         <span class="btn__label">TOPへ</span>
       </a>
-      <img src="./img/rapidoku_logo_mini.png" height="40px" alt="">
+      <img src="./img/rapidoku_logo_mini.png" class="mini-banner" alt="">
     </div>
   </header>
 
@@ -71,8 +71,9 @@
           <span id="prev__time" class="font-large score">mi:ss.sss</span>
           <span id="prev__speed">（x.xx文字/秒）</span>
         </div>
-        <div class="result__diff text-center">
-          <span id="diff__time" class="score">S mi:ss.sss xxxx</span>
+        <div class="result__diff text-center mt-4">
+          <span id="diff__time" class="score"></span>
+          <span id="diff__badge"></span>
         </div>
       </div>
     </section>
@@ -85,6 +86,7 @@
 
       <ul id="records" class="list">
       </ul>
+      <p><a class="link font-small" href="./history.html">▶前日までの記録を見る</a></p>
     </section>
 
     <!-- アクション -->
