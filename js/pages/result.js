@@ -13,11 +13,14 @@ let memoOutput = null;
 // 初期化
 async function init() {
   const { user, error } = await getCurrentUser();
-
+  if (!user) {
+    location.href = "./login.html?redirect=/result.html";
+    return;
+  }
   const lastRec = JSON.parse(sessionStorage.getItem("lastRecord"));
   if (!lastRec) {
     alert("計測記録がありません。TOPに戻ります");
-    location.href = "index.html";
+    location.href = "./index.html";
     return;
   }
   lastRecId = lastRec.id;
@@ -26,7 +29,7 @@ async function init() {
   const isValid = await validateContentForDate(lastRec.content_id, today);
   if (!isValid) {
     alert("データ不整合が発生しました。TOP画面からやり直してください。");
-    location.href = "index.html";
+    location.href = "./index.html";
   }
 
   const lastTime = formatMsToTime(lastRec.time_sec);

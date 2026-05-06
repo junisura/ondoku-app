@@ -1,4 +1,4 @@
-import { selectContentIdByDate, selectContentById, selectDailyContent } from "./repository.js";
+import { selectContentIdByDate, selectDailyContent } from "./repository.js";
 
 const CACHE_KEY = "daily_content_cache";
 

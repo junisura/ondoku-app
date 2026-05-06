@@ -1,3 +1,5 @@
+.ma-0 { margin: 0; }
+
 .mt-0 { margin-top: 0; }
 .mt-4 { margin-top: 4px; }
 .mt-8 { margin-top: 8px; }
@@ -24,7 +26,7 @@
 
 .score { font-family: "JetBrains Mono", monospace; }
 
-.display-none { display: none; }
+.display-none { display: none !important; }
 
 .no-wrap { white-space: nowrap; }
 

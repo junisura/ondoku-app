@@ -10,6 +10,11 @@ let currentUserId;
 // 初期化
 async function init() {
   const { user, error } = await getCurrentUser();
+  if (!user) {
+    alert("過去ログを見るにはログインが必要です");
+    location.href = "./login.html?redirect=/history.html";
+    return;
+  }
   currentUserId = user.id;
   const todayStr = formatISOToYMD(new Date().toISOString());
 

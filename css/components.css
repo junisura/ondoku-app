@@ -109,6 +109,13 @@ a.btn::after {
   box-shadow: 0 3px #B94435, inset 0 3px #F08A7B;
 }
 
+.btn--conf {
+  color: var(--color-text-sub);
+  background-color: var(--color-button-conf);
+  box-shadow: 0 1px #99B5F5, inset 0 1px #FFFDF8;
+  margin-bottom: 0;
+}
+
 .btn:disabled {
   color: var(--color-common-gray-high);
   opacity: 0.8;
@@ -150,6 +157,16 @@ a.btn::after {
   color: var(--color-text-sub);
   font-size: var(--font-md);
   font-weight: 700;
+}
+
+/* ログイン */
+.login_box {
+  display: flex;
+  flex-direction: column;
+}
+
+.login_box input {
+  box-sizing: border-box;
 }
 
 /* イラスト */
@@ -380,6 +397,9 @@ a.btn::after {
 /* ヘルプ */
 .help-ul {
   padding-left: 1rem;
+}
+.faq-item {
+  margin-top: 0.5rem;
 }
 .faq-item p {
   padding-left: 1rem;

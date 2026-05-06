@@ -97,3 +97,10 @@
   color: var(--color-common-gray-low);
   text-align: center;
 }
+
+/* メッセージ */
+.message-row {
+  padding: 16px;
+  text-align: center;
+}
+

@@ -21,11 +21,20 @@
 </head>
 <body class="page page--top">
 
+  <header class="header pa-0">
+    <div class="text-right">
+      <p id="logoutBtn" class="btn btn--conf header__back display-none">
+        <span class="material-symbols-outlined font-xs">logout</span>
+        <span class="btn__label font-xs">ログアウト</span>
+      </p>
+    </div>
+  </header>
+
   <main class="container">
 
     <!-- サイトタイトル -->
-    <h1 class="mt-8">
-      <span id="logo"><img src="./img/rapidoku_logo.png" alt="まいにち！ラピ読　高速(rapid)音読で脳を活性化" class="w-100"></span>
+    <h1 class="ma-0">
+      <img src="./img/rapidoku_logo.png" alt="まいにち！ラピ読　高速(rapid)音読で脳を活性化" class="w-100">
     </h1>
 
     <!-- 本日のテキスト -->
@@ -64,13 +73,20 @@
     </section>
 
     <div class="mt-16">
-      <a id="historyBtn" type="button" class="btn btn--secondary btn--block" href="./history.html">
+      <a id="historyBtn" type="button" class="btn btn--secondary btn--block display-none" href="./history.html">
         <span class="material-symbols-outlined">history_edu</span>
         <span class="btn__label">過去ログを見る</span>
       </a>
     </div>
 
-    <div class="mt-8 text-center">
+    <div class="mt-16">
+      <a id="loginBtn" type="button" class="btn btn--secondary btn--block display-none" href="./login.html">
+        <span class="material-symbols-outlined">login</span>
+        <span class="btn__label">ログイン／新規登録</span>
+      </a>
+    </div>
+
+    <div class="mt-8">
       <a id="historyBtn" type="button" class="btn btn--other btn--block" href="./howto.html">
         <span class="material-symbols-outlined">help</span>
         <span class="btn__label">使い方・高速音読について</span>
@@ -78,7 +94,9 @@
     </div>
 
   </main>
-  <footer class=" text-center">
+
+
+  <footer class="text-center">
     <small>&copy; 2026 junisura</small>
   </footer>
 </body>

@@ -54,10 +54,11 @@
 
     <!-- タイマーエリア -->
     <section class="timer-box">
-      <div class="timer-row">
+      <div id="timer-row" class="timer-row">
         <div id="timer-value" class="timer__value">00:00.00</div>
       </div>
-      <div class="control-row">
+
+      <div id="control-row" class="control-row">
         <button id="resetBtn" type="button" class="btn btn--secondary control__btn btn--reset">
           <span class="material-symbols-outlined">replay</span>
           <span class="btn__label">リセット</span>
@@ -75,6 +76,14 @@
           <span class="material-symbols-outlined">stop</span>
           <span class="btn__label">終了</span>
         </button>
+      </div>
+
+      <div id="message-row" class="message-row display-none">
+        <div>計測するにはログインが必要です</div>
+        <a href="./login.html?redirect=/measurement.html" class="btn btn--other mt-16">
+          <span class="material-symbols-outlined">login</span>
+          <span class="btn__label">ログイン／新規登録</span>
+        </a>
       </div>
     </section>
 

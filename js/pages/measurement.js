@@ -5,6 +5,7 @@ import { getRecordsByDate, createRecord } from "../lib/records.js";
 import { Timer } from "../lib/timer.js";
 
 // 初期化
+let isAuth = false;
 let today;
 let currentContent;
 let timerValue;
@@ -12,6 +13,9 @@ let spIcon;
 let spLabel;
 
 async function init() {
+  const { user, error } = await getCurrentUser();
+  if (user) { isAuth = true; }
+
   const params = new URLSearchParams(location.search);
   today = params.get("date") || formatISOToYMD(new Date().toISOString());
   isSameDay(today);
@@ -25,7 +29,7 @@ async function init() {
     document.getElementById("text-count").textContent = `文字数：${currentContent.contents.char_count}字`;
   } else {
     alert("教材の取得に失敗しました。恐れ入りますがTOP画面からやり直してください。");
-    location.href = "index.html";
+    location.href = "./index.html";
     return;
   }
 
@@ -73,7 +77,8 @@ async function stopTimer() {
 
   const { user, error } = await getCurrentUser();
   if (!user) {
-    alert("ログインが必要です");
+    alert("結果を保存するにはログインが必要です");
+    location.href = "./login.html?redirect=/measurement.html";
     return;
   }
 
@@ -95,11 +100,11 @@ async function stopTimer() {
   try {
     const rec = await createRecord(record);
     sessionStorage.setItem("lastRecord", JSON.stringify(rec));
-    location.href = "result.html";
+    location.href = "./result.html";
   } catch (error) {
     console.error(error);
     alert("記録に失敗しました。恐れ入りますが計測をやり直してください。");
-    location.href = "index.html";
+    location.href = "./index.html";
     return false;
   }
 }
@@ -108,15 +113,22 @@ async function stopTimer() {
 window.addEventListener("DOMContentLoaded", async () => {
   await init();
 
-  const startPauseBtn = document.getElementById("startPauseBtn");
-  const stopBtn = document.getElementById("stopBtn");
-  const resetBtn = document.getElementById("resetBtn");
-  timerValue = document.getElementById("timer-value");
+  if (isAuth) {
+    const startPauseBtn = document.getElementById("startPauseBtn");
+    const stopBtn = document.getElementById("stopBtn");
+    const resetBtn = document.getElementById("resetBtn");
+    timerValue = document.getElementById("timer-value");
 
-  spIcon = startPauseBtn.querySelector(".material-symbols-outlined");
-  spLabel = startPauseBtn.querySelector(".btn__label");
+    spIcon = startPauseBtn.querySelector(".material-symbols-outlined");
+    spLabel = startPauseBtn.querySelector(".btn__label");
 
-  resetBtn.addEventListener("click", resetTimer);
-  startPauseBtn.addEventListener("click", toggleTimer);
-  stopBtn.addEventListener("click", stopTimer);
+    resetBtn.addEventListener("click", resetTimer);
+    startPauseBtn.addEventListener("click", toggleTimer);
+    stopBtn.addEventListener("click", stopTimer);
+  } else {
+    document.getElementById("timer-row").classList.add("display-none");
+    document.getElementById("control-row").classList.add("display-none");
+    document.getElementById("message-row").classList.remove("display-none");
+  }
+
 });

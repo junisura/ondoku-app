@@ -95,7 +95,7 @@ export function isSameDay(workDate) {
   if (!workDate || workDate !== today) {
     console.error("content_id_invalid", { contentId, workDate, expected });
     alert("日付が変わったためセッションを終了します");
-    location.href = "index.html";
+    location.href = "./index.html";
     return false;
   }
 

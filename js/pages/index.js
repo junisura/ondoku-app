@@ -1,4 +1,4 @@
-import { login, getCurrentUser } from "../lib/auth.js";
+import { login, getCurrentUser, logout } from "../lib/auth.js";
 import { formatISOToYMD, formatYMDToJPMDA, formatYMDToJP } from "../lib/date.js";
 import { getCachedTodayContent } from "../lib/contents.js";
 import { getBestRecord } from "../lib/records.js";
@@ -6,7 +6,6 @@ import { getBestRecord } from "../lib/records.js";
 let today = "";
 
 async function init() {
-  await login("gyosupya588@fukurou.ch", "ondock2026");
   const { user, error } = await getCurrentUser();
 
   today = formatISOToYMD(new Date().toISOString());
@@ -22,13 +21,18 @@ async function init() {
     document.getElementById("text-category").textContent = "";
     document.getElementById("openBtn").disabled = true;
   }
-
-  const bestRecord = await getBestRecord(user.id);
-  if (bestRecord) {
-    document.getElementById("best-record-section").classList.remove("display-none");
-    document.getElementById("best-record").textContent = 
-      `${bestRecord.speed.toFixed(2)}文字/秒（${bestRecord.time_sec.toFixed(2)}秒）`;
-    document.getElementById("best-date").textContent = formatYMDToJP(bestRecord.work_date);
+  if (user) {
+    const bestRecord = await getBestRecord(user.id);
+    if (bestRecord) {
+      document.getElementById("best-record-section").classList.remove("display-none");
+      document.getElementById("best-record").textContent = 
+        `${bestRecord.speed.toFixed(2)}文字/秒（${bestRecord.time_sec.toFixed(2)}秒）`;
+      document.getElementById("best-date").textContent = formatYMDToJP(bestRecord.work_date);
+    }
+    document.getElementById("historyBtn").classList.remove("display-none");
+    document.getElementById("logoutBtn").classList.remove("display-none");
+  } else {
+    document.getElementById("loginBtn").classList.remove("display-none");
   }
 
 }
@@ -39,8 +43,14 @@ function openText() {
   location.href = url.toString();
 };
 
+async function loggedOut() {
+  await logout();
+  location.href = "./login.html";
+};
+
 // メイン処理
 window.addEventListener("DOMContentLoaded", async () => {
   await init();
   document.getElementById("openBtn").addEventListener("click", openText);
+  document.getElementById("logoutBtn").addEventListener("click", loggedOut);
 });
