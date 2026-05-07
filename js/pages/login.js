@@ -41,7 +41,7 @@ async function submit() {
 
   // 成功時リダイレクト
   const params = new URLSearchParams(location.search);
-  const redirect = params.get("redirect") || "/";
+  const redirect = params.get("redirect") || "./index.html";
 
   location.href = redirect;
 };
