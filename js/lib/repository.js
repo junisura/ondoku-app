@@ -59,6 +59,14 @@ export async function selectRecordsByDate(userId, workDate) {
     .order("created_at", { ascending: false });
 }
 
+export async function selectRecordsCountByDate(workDate) {
+  return await supabase
+    .from("records")
+    .select("*", { count: "exact", head: true })
+    .eq("work_date", workDate)
+    .is("deleted_at", null);
+}
+
 export async function insertRecord(record) {
   // 挿入したレコードを返却する
   return await supabase

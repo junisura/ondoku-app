@@ -1,7 +1,7 @@
 import { login, getCurrentUser, logout } from "../lib/auth.js";
 import { formatISOToYMD, formatYMDToJPMDA, formatYMDToJP } from "../lib/date.js";
 import { getCachedTodayContent } from "../lib/contents.js";
-import { getBestRecord } from "../lib/records.js";
+import { getRecordsCountByDate, getBestRecord } from "../lib/records.js";
 
 let today = "";
 
@@ -21,6 +21,14 @@ async function init() {
     document.getElementById("text-category").textContent = "";
     document.getElementById("openBtn").disabled = true;
   }
+
+  const recCount = await getRecordsCountByDate(today);
+  if (recCount > 0) {
+    document.getElementById("records-count").textContent = `このテキストは本日${recCount}回読まれました`;
+  } else {
+    document.getElementById("records-count").textContent = `今日最初の音読をしてみませんか？`;
+  }
+
   if (user) {
     const bestRecord = await getBestRecord(user.id);
     if (bestRecord) {

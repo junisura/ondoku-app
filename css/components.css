@@ -126,6 +126,24 @@ a.btn::after {
   color: var(--color-common-white);
 }
 
+.x-share-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 999px;
+  background-color: var(--color-common-gray-low);
+  color: var(--color-common-white);
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 3px #4a4a4a, inset 0 3px #B8ABA6;
+}
+
+.x-share-btn:hover {
+  opacity: 0.9;
+}
+
 /* カード */
 .card {
   border-radius: 12px;
@@ -205,6 +223,12 @@ a.btn::after {
 }
 
 /* 計測結果 */
+.today-result {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .result__time {
   font-size: var(--font-xxl); /* 元は40pxだった */
   font-weight: 700;

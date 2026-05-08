@@ -1,4 +1,4 @@
-import { selectBestRecord, insertRecord, selectRecordById, selectRecordsByDate, selectPreviousRecord, updateMemo, selectRecordedDates } from "./repository.js";
+import { selectBestRecord, insertRecord, selectRecordById, selectRecordsByDate, selectRecordsCountByDate, selectPreviousRecord, updateMemo, selectRecordedDates } from "./repository.js";
 import { formatISOToYMD } from "./date.js";
 
 export async function getBestRecord(userId) {
@@ -43,6 +43,17 @@ export async function getRecordsByDate(userId, today) {
   return data;
 }
 
+export async function getRecordsCountByDate(today) {
+  const { count, error } = await selectRecordsCountByDate(today);
+
+  if (error) {
+    console.error("records_count_fetch_error", { today, error });
+    return null;
+  }
+
+  return count;
+}
+
 export async function getPrevRecord(userId, currentRec) {
   const { data, error } = await selectPreviousRecord(userId, currentRec.created_at);
 
@@ -78,7 +89,7 @@ export async function getRecordsByPeriod(userId, fromDate, toDate) {
 }
 
 export async function getStreakContext(userId, toDate) {
-  const startDate = "2026-04-01";
+  const startDate = "2026-05-09";
 
   const { data, error } = await selectRecordedDates(userId, startDate, toDate);
 

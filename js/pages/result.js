@@ -1,12 +1,13 @@
 import { getCurrentUser } from "../lib/auth.js";
 import { formatMsToTime } from "../lib/date.js";
-import { validateContentForDate } from "../lib/contents.js";
+import { validateContentForDate, getCachedTodayContent } from "../lib/contents.js";
 import { findRecordById, getRecordsByDate, getPrevRecord, getBestRecord, updateRecordMemo } from "../lib/records.js";
 import { renderRecordList } from "../lib/recordList.js";
 
 // データ読み込み
 let lastRecId;
 let today;
+let lastTime;
 let memoInput = null;
 let memoOutput = null;
 
@@ -32,9 +33,10 @@ async function init() {
     location.href = "./index.html";
   }
 
-  const lastTime = formatMsToTime(lastRec.time_sec);
+  lastTime = formatMsToTime(lastRec.time_sec);
   document.getElementById("last__time").textContent = lastTime;
   document.getElementById("last__speed").textContent = `（${lastRec.speed.toFixed(2)}文字/秒）`;
+  const imgEl = document.getElementById("result__img");
 
   memoInput = document.getElementById("memo__input");
   memoOutput = document.getElementById("memo__output");
@@ -62,6 +64,13 @@ async function init() {
         diffTime.textContent = diffDeco.diffText;
         diffBadge.textContent = diffDeco.badgeText;
       }
+
+      const rate = diff / prev.time_sec;
+      const resultImage = getImage(rate);
+      if (resultImage) {
+        imgEl.src = resultImage.fileName;
+        imgEl.alt = resultImage.altText;
+      }
     }
   }
 
@@ -69,6 +78,8 @@ async function init() {
   const bestRecord = await getBestRecord(user.id);
   if (lastRec.speed >= bestRecord.speed) {
     document.getElementById("best-updated").classList.remove("display-none");
+    imgEl.src = "./img/rapidoku_result_best.png";
+    imgEl.alt = "自己ベスト更新！";
   }
 
   // 結果一覧を描画
@@ -76,6 +87,7 @@ async function init() {
   renderRecordList(todayRecords);
 }
 
+// 前回比較計算
 function getDiffDeco(diff) {
   if (diff > 0) {
     return {
@@ -84,9 +96,7 @@ function getDiffDeco(diff) {
       textClass: "text-danger",
       badgeClass: "badge-danger"
     };
-  }
-
-  if (diff < 0) {
+  } else if (diff < 0) {
     return {
       diffText: `-${formatMsToTime(diff)}`,
       badgeText: "速度UP!",
@@ -94,13 +104,27 @@ function getDiffDeco(diff) {
       badgeClass: "badge-success"
     };
   }
-
   return {
     diffText: `${formatMsToTime(diff)}`,
     badgeText: "",
     textClass: "",
     badgeClass: ""
   };
+}
+
+function getImage(rate) {
+  if (rate <= -0.04) {
+    return {
+      fileName: "./img/rapidoku_result_good.png",
+      altText: "良い結果！"
+    };
+  } else if (rate >= 0.05) {
+    return {
+      fileName: "./img/rapidoku_result_bad.png",
+      altText: "残念な結果…"
+    };
+  }
+  return null;
 }
 
 // ボタン
@@ -147,9 +171,18 @@ function setMemoEditMode(isOutput) {
   }
 }
 
+async function intentX() {
+  const currentContent = await getCachedTodayContent(today);
+  const text = encodeURIComponent(`「${currentContent.contents.title}」を音読したよ！　記録：${lastTime}\n`);
+  const tag = encodeURIComponent("ラピ読");
+  const url = `https://twitter.com/intent/tweet?text=${text}&url=https://junisura.github.io/rapidoku/&hashtags=${tag}`;
+  window.open(url, "_blank");
+}
+
 // メイン処理
 window.addEventListener("DOMContentLoaded", async () => {
   await init();
   document.getElementById("saveMemoBtn").addEventListener("click", saveMemo);
   document.getElementById("retryBtn").addEventListener("click", retry);
+  document.getElementById("xShareBtn").addEventListener("click", intentX);
 });

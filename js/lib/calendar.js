@@ -7,7 +7,7 @@ let onSelectDate = null;
 let currentUserId;
 let startDate;
 let endDate;
-const SERVICE_START_DATE = new Date("2026-04-01");
+const SERVICE_START_DATE = new Date("2026-05-09");
 
 export async function initCalendar(userId, callback) {
   currentUserId = userId;
