@@ -60,11 +60,10 @@ export async function selectRecordsByDate(userId, workDate) {
 }
 
 export async function selectRecordsCountByDate(workDate) {
-  return await supabase
-    .from("records")
-    .select("*", { count: "exact", head: true })
-    .eq("work_date", workDate)
-    .is("deleted_at", null);
+  return await supabase.rpc(
+    "get_today_read_count",
+    { target_date: workDate }
+  );
 }
 
 export async function insertRecord(record) {

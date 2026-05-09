@@ -44,14 +44,14 @@ export async function getRecordsByDate(userId, today) {
 }
 
 export async function getRecordsCountByDate(today) {
-  const { count, error } = await selectRecordsCountByDate(today);
+  const { data, error } = await selectRecordsCountByDate(today);
 
   if (error) {
     console.error("records_count_fetch_error", { today, error });
     return null;
   }
 
-  return count;
+  return data;
 }
 
 export async function getPrevRecord(userId, currentRec) {
