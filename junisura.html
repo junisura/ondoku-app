@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <script type="module" src="./js/lib/auth.js"></script>
+  <script type="module" src="./js/lib/repository.js"></script>
+  <script type="module" src="./js/lib/date.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" href="favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@500;700&display=swap" rel="stylesheet">
+  <link href="./css/base.css" rel="stylesheet">
+  <link href="./css/components.css" rel="stylesheet">
+  <link href="./css/layout.css" rel="stylesheet">
+  <link href="./css/utilities.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <title>まいにち！ラピ読 - 管理画面</title>
+</head>
+<script type="module">
+import { getCurrentUser } from "./js/lib/auth.js";
+import { selectContentById } from "./js/lib/repository.js";
+import { formatYMDToJPMDA } from "./js/lib/date.js";
+const ADMIN_USER_ID = "438fa051-6f94-4420-9015-dc1cd98f8a10";
+async function init() {
+  const { user, error } = await getCurrentUser();
+  if (!user || error || user.id !== ADMIN_USER_ID) {
+    location.href = "./index.html";
+  }
+};
+async function openText(contentId) {
+
+  const { data, error } = await selectContentById(contentId);
+  if (error) {
+    document.getElementById("error").textContent = `【${error.code}】（${error.details}）${error.message}`;
+    document.getElementById("content-id").textContent = "";
+    document.getElementById("text-theme").textContent = "";
+    document.getElementById("text-title").textContent = "";
+    document.getElementById("text-category").textContent = "";
+    document.getElementById("text-body").textContent = "";
+    document.getElementById("text-count").textContent = "";
+  } else {
+    document.getElementById("error").textContent = ""
+    document.getElementById("content-id").textContent = `ID：${data.id}`;
+    document.getElementById("text-theme").textContent = `（${data.theme}）`;
+    document.getElementById("text-title").textContent = data.title;
+    document.getElementById("text-category").textContent = data.category;
+    document.getElementById("text-body").textContent = data.text_body.replace(/\\n/g, "\n");
+    document.getElementById("text-count").textContent = `文字数：${data.char_count}字`;
+  }
+  document.getElementById("today-date").textContent = "";
+  document.getElementById("text-body").classList.add('font-small');
+};
+function writeDate(date) {
+  document.getElementById("content-id").textContent = "";
+  document.getElementById("text-theme").textContent = "";
+  document.getElementById("today-date").textContent = `${formatYMDToJPMDA(date)}`;
+  document.getElementById("text-body").classList.remove('font-small');
+};
+window.openText = openText;
+window.writeDate = writeDate;
+
+// メイン処理
+window.addEventListener("DOMContentLoaded", async () => {
+  await init();
+});
+</script>
+<body class="page page--top">
+
+  <main class="container">
+
+    <section class="card card--sub">
+      <input type="text" id="contentId" style="height:1.5rem; width:1.5rem;">
+      <button type="button" class="btn--other no-wrap" onclick="openText(document.getElementById('contentId').value)">取得</button>
+      <input type="text" id="date" style="height:1.5rem; width:5rem;">
+      <button type="button" class="btn--other no-wrap" onclick="writeDate(document.getElementById('date').value)">日付</button>
+      <div id="error" class="text-danger"></div>
+    </section>
+
+    <section class="card card--main mt-16">
+      <div class="card__header text-center">
+        <h2 class="card__title">本日のテキスト</h2>
+        <div id="content-id"></div>
+        <p id="text-theme" class="font-medium"></p><br>
+        <p id="today-date" class="text-muted"></p>
+      </div>
+      <div class="card__body">
+        <h3 id="text-title" class="text-title"></h3>
+        <div class="flex-area-center"><p class="category-frame">
+          <span class="category-label">カテゴリ</span><span id="text-category" class="text-category"></span>
+        </p></div>
+        <p id="text-body" class="text-body font-small"></p>
+        <p id="text-count" class="text-muted mt-8 text-right"></p>
+      </div>
+    </section>
+
+  </main>
+
+</body>
+</html>
