@@ -2,10 +2,12 @@ import { signUp, login, getCurrentUser } from "../lib/auth.js";
 
 let mode = "login";
 let submitBtn;
+let passwordEl;
 let toggleEl;
 let errorEl;
 
-async function submit() {
+async function handleSubmit(e) {
+  e.preventDefault();	// ブラウザ標準submit処理をキャンセル
   submitBtn.disabled = true;
 
   const email = document.getElementById("email").value;
@@ -53,11 +55,13 @@ function switchMode() {
   if (mode === "login") {
     title.textContent = "ログイン";
     submitBtn.textContent = "ログイン";
+    passwordEl.autocomplete = "current-password";
     toggleEl.textContent = "アカウントをお持ちでない方はこちら";
     errorEl.classList.add("display-none");
   } else {
     title.textContent = "新規登録";
     submitBtn.textContent = "登録する";
+    passwordEl.autocomplete = "new-password";
     toggleEl.textContent = "すでにアカウントをお持ちの方はこちら";
     errorEl.classList.add("display-none");
   }
@@ -66,8 +70,10 @@ function switchMode() {
 // メイン処理
 window.addEventListener("DOMContentLoaded", async () => {
   submitBtn = document.getElementById("submitBtn");
-  submitBtn.addEventListener("click", submit);
+  passwordEl = document.getElementById("password");
   toggleEl = document.getElementById("toggleText");
   toggleEl.addEventListener("click", switchMode);
   errorEl = document.getElementById("error");
+
+  document.getElementById("login-form").addEventListener("submit", handleSubmit);
 });

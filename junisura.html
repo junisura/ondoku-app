@@ -31,8 +31,9 @@ async function init() {
     location.href = "./index.html";
   }
 };
-async function openText(contentId) {
-
+async function openText(e) {
+  e.preventDefault();	// ブラウザ標準submit処理をキャンセル
+  const contentId = document.getElementById("contentId").value;
   const { data, error } = await selectContentById(contentId);
   if (error) {
     document.getElementById("error").textContent = `【${error.code}】（${error.details}）${error.message}`;
@@ -54,7 +55,9 @@ async function openText(contentId) {
   document.getElementById("today-date").textContent = "";
   document.getElementById("text-body").classList.add('font-small');
 };
-function writeDate(date) {
+function writeDate(e) {
+  e.preventDefault();	// ブラウザ標準submit処理をキャンセル
+  const date = document.getElementById("date").value;
   document.getElementById("content-id").textContent = "";
   document.getElementById("text-theme").textContent = "";
   document.getElementById("today-date").textContent = `${formatYMDToJPMDA(date)}`;
@@ -66,17 +69,23 @@ window.writeDate = writeDate;
 // メイン処理
 window.addEventListener("DOMContentLoaded", async () => {
   await init();
+  document.getElementById("number-form").addEventListener("submit", openText);
+  document.getElementById("date-form").addEventListener("submit", writeDate);
 });
 </script>
 <body class="page page--top">
 
   <main class="container">
 
-    <section class="card card--sub">
-      <input type="text" id="contentId" style="height:1.5rem; width:1.5rem;">
-      <button type="button" class="btn--other no-wrap" onclick="openText(document.getElementById('contentId').value)">取得</button>
-      <input type="text" id="date" style="height:1.5rem; width:5rem;">
-      <button type="button" class="btn--other no-wrap" onclick="writeDate(document.getElementById('date').value)">日付</button>
+    <section class="card card--sub flex-area-center">
+      <form id="number-form">
+        <input type="number" id="contentId" style="height:1.5rem; width:5rem;" pattern="[0-9]">
+        <button type="submit" class="btn--other no-wrap">取得</button>
+      </form>
+      <form id="date-form">
+        <input type="date" id="date" style="height:1.5rem; width:8rem;">
+        <button type="submit" class="btn--other no-wrap">日付</button>
+      </form>
       <div id="error" class="text-danger"></div>
     </section>
 
